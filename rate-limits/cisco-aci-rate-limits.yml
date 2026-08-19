@@ -1,0 +1,64 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+docs: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+limit_count: 2
+note: >-
+  Cisco publishes NO fixed rate limit for the APIC REST API, because there is no shared multi-tenant API to
+  ration — the controller is customer-operated hardware and the operator sets the policy. What Cisco does
+  publish is (a) the throttling controls an operator configures, and (b) one hard structural ceiling on
+  result-set size. Both are recorded as limits because both stop a caller. No RateLimit-* or Retry-After
+  response headers are documented anywhere in the REST API guide, which is the more consequential finding
+  for an agent: there is no runtime signal to back off on.
+response_headers:
+  documented: []
+  detail: >-
+    None. No RateLimit-Limit / RateLimit-Remaining / RateLimit-Reset, no X-RateLimit-*, no Retry-After. A
+    client learns it has been throttled by the request failing, not by a header.
+status_code_on_exhaustion: 503
+status_code_note: >-
+  A query whose result set exceeds the documented ceiling times out with HTTP 503 and the message "Unable to
+  process the query, result dataset is too big". Login throttling, when configured, refuses the connection
+  at the web tier rather than returning a modeled status.
+limits:
+- id: query-result-object-ceiling
+  scope: per-request
+  type: result-size
+  limit: 100000
+  unit: managed objects
+  window: null
+  burst: null
+  configurable: false
+  detail: >-
+    "For REST API queries on a class that has more than 100,000 objects across the fabric, the Cisco APIC
+    generates the indicated errors" — the APIC does not respond with more than 100,000 objects. Generic
+    class queries against large fabrics intermittently fail with HTTP 503.
+  remediation: >-
+    Scope with target-subtree-class / query-target-filter / rsp-prop-include, or page with page-size and
+    page.
+  source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+- id: http-https-login-throttling
+  scope: per-controller
+  type: operator-configured-throttle
+  limit: null
+  unit: requests
+  window: operator-defined
+  burst: null
+  configurable: true
+  detail: >-
+    "Configuring HTTP and HTTPS Throttling Using the CLI ... This procedure limits the rate of HTTP and
+    HTTPS requests to the GUI and the REST API." Configured through a comm-policy on the APIC. A separate
+    global NGINX rate limit is documented in "Cisco ACI Support for NGINX Rate Limit". Because these are set
+    per deployment, no numeric value is publishable — the honest record is that the ceiling exists and is
+    invisible to the client until it fires.
+  source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+session_limits:
+- id: session-timeout
+  detail: >-
+    Not a rate limit but the adjacent constraint an integrator hits first: the API session expires after
+    refreshTimeoutSeconds (default 600) unless refreshed with aaaRefresh, and returns HTTP 403 thereafter.
+  see: authentication/cisco-aci-authentication.yml
+gaps:
+- No published numeric request rate limit.
+- No rate-limit response headers of any kind.
+- No documented Retry-After on throttled or oversized requests.

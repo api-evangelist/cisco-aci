@@ -1,0 +1,490 @@
+generated: '2026-08-19'
+method: derived
+source: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community/blob/main/scripts/server.py
+note: Cisco publishes no OpenAPI for the APIC REST API, so there are no operationIds to bind to. This crosswalk
+  therefore binds each MCP tool to the literal APIC REST method + URI path its own source code calls, read from
+  the published scripts/server.py on 2026-08-19. Confidence is high on every row because the binding is read from
+  the implementation, not inferred from names. Path segments in braces are substituted from the tool's own parameters;
+  {apic-hostname} is the customer's controller.
+surfaces:
+  openapi: null
+  openapi_note: None published. STEP 0b contract discovery found no OpenAPI/Swagger on any Cisco host.
+  rest: https://{apic-hostname}/api — documented in the Cisco APIC REST API Configuration Guide
+  graphql: null
+  mcp: local stdio only (python3 scripts/server.py); no hosted endpoint
+  gated:
+  - The APIC REST API requires an aaaLogin session; the MCP server requires APIC credentials in .env
+coverage:
+  mcp_tools_total: 47
+  bound_to_rest: 43
+  mcp_only: 4
+  rest_only: unknown — the APIC MIT exposes thousands of managed-object classes; the MCP server covers 20 of them
+  distinct_rest_paths: 32
+crosswalk:
+- tool: aci_tenants_get
+  category: read
+  rest:
+  - GET /api/node/class/fvTenant.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all tenants from ACI
+- tool: aci_application_profiles_get
+  category: read
+  rest:
+  - GET /api/node/class/fvAp.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all application profiles from ACI
+- tool: aci_endpoint_groups_get
+  category: read
+  rest:
+  - GET /api/node/class/fvAEPg.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all endpoint groups (EPGs) from ACI
+- tool: aci_bridge_domains_get
+  category: read
+  rest:
+  - GET /api/node/class/fvBD.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all bridge domains from ACI
+- tool: aci_contexts_get
+  category: read
+  rest:
+  - GET /api/node/class/fvCtx.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all contexts (VRFs) from ACI
+- tool: aci_subnets_get
+  category: read
+  rest:
+  - GET /api/node/class/fvSubnet.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all subnets from ACI
+- tool: aci_contracts_get
+  category: read
+  rest:
+  - GET /api/node/class/vzBrCP.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all contracts from ACI
+- tool: aci_contract_subjects_get
+  category: read
+  rest:
+  - GET /api/node/class/vzSubj.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all contract subjects from ACI
+- tool: aci_filters_get
+  category: read
+  rest:
+  - GET /api/node/class/vzFilter.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all filters from ACI
+- tool: aci_filter_entries_get
+  category: read
+  rest:
+  - GET /api/node/class/vzEntry.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all filter entries from ACI
+- tool: aci_endpoints_get
+  category: read
+  rest:
+  - GET /api/node/class/fvCEp.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all endpoints from ACI
+- tool: aci_faults_get
+  category: read
+  rest:
+  - GET /api/node/class/faultSummary.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all faults from ACI
+- tool: aci_fabric_nodes_get
+  category: read
+  rest:
+  - GET /api/node/class/fabricNode.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all fabric nodes from ACI
+- tool: aci_fabric_health_get
+  category: read
+  rest:
+  - GET /api/node/class/fabricHealthTotal.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get fabric health from ACI
+- tool: aci_fabric_links_get
+  category: read
+  rest:
+  - GET /api/node/class/fabricLink.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get fabric links from ACI
+- tool: aci_physical_interfaces_get
+  category: read
+  rest:
+  - GET /api/node/class/l1PhysIf.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all physical interfaces from ACI
+- tool: aci_ethernet_interfaces_get
+  category: read
+  rest:
+  - GET /api/node/class/ethpmPhysIf.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all ethernet interfaces from ACI
+- tool: aci_vlan_pools_get
+  category: read
+  rest:
+  - GET /api/node/class/fvnsVlanInstP.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all VLAN pools from ACI
+- tool: aci_domains_get
+  category: read
+  rest:
+  - GET /api/node/class/physDomP.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all physical domains from ACI
+- tool: aci_critical_faults_get
+  category: read
+  rest:
+  - GET /api/node/class/faultSummary.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get critical faults from ACI
+- tool: aci_tenant_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'description: str = ""'
+  description: Create a new tenant in ACI
+- tool: aci_vrf_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'vrf_name: str'
+  - 'description: str = ""'
+  description: Create a new VRF (Context) in ACI
+- tool: aci_bridge_domain_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'vrf_name: str'
+  - 'bd_name: str'
+  - 'subnet_ip: str = ""'
+  - 'description: str = ""'
+  description: Create a new Bridge Domain in ACI
+- tool: aci_application_profile_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'app_name: str'
+  - 'description: str = ""'
+  description: Create a new Application Profile in ACI
+- tool: aci_epg_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/ap-{app_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'app_name: str'
+  - 'epg_name: str'
+  - 'bd_name: str'
+  - 'description: str = ""'
+  description: Create a new Endpoint Group (EPG) in ACI
+- tool: aci_contract_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'contract_name: str'
+  - 'description: str = ""'
+  description: Create a new Contract in ACI
+- tool: aci_contract_subject_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/brc-{contract_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'contract_name: str'
+  - 'subject_name: str'
+  - 'filter_name: str'
+  - 'description: str = ""'
+  description: Create a new Contract Subject in ACI
+- tool: aci_filter_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'filter_name: str'
+  - 'description: str = ""'
+  description: Create a new Filter in ACI
+- tool: aci_filter_entry_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/flt-{filter_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'filter_name: str'
+  - 'entry_name: str'
+  - 'protocol: str = "tcp"'
+  - 'dst_port: str = "80"'
+  - 'description: str = ""'
+  description: Create a new Filter Entry in ACI
+- tool: aci_epg_contract_provider_bind
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/ap-{app_name}/epg-{epg_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'app_name: str'
+  - 'epg_name: str'
+  - 'contract_name: str'
+  description: Bind EPG as Contract Provider
+- tool: aci_epg_contract_consumer_bind
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/ap-{app_name}/epg-{epg_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'app_name: str'
+  - 'epg_name: str'
+  - 'contract_name: str'
+  description: Bind EPG as Contract Consumer
+- tool: aci_epg_domain_bind
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/ap-{app_name}/epg-{epg_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'app_name: str'
+  - 'epg_name: str'
+  - 'domain_name: str'
+  - 'domain_type: str = "phys"'
+  description: Bind EPG to Physical or VMM Domain
+- tool: aci_l3_outside_get
+  category: read
+  rest:
+  - GET /api/node/class/l3extOut.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all Layer 3 Outside connections from ACI
+- tool: aci_external_networks_get
+  category: read
+  rest:
+  - GET /api/node/class/l3extInstP.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all external networks from ACI
+- tool: aci_bgp_peers_get
+  category: read
+  rest:
+  - GET /api/node/class/bgpPeerEntry.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'query_params: Optional[Dict] = None'
+  description: Get all BGP peers from ACI
+- tool: aci_l3out_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'l3out_name: str'
+  - 'vrf_name: str'
+  - 'description: str = ""'
+  description: Create a new Layer 3 Outside in ACI
+- tool: aci_external_epg_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/out-{l3out_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'l3out_name: str'
+  - 'ext_epg_name: str'
+  - 'subnet: str = "0.0.0.0/0"'
+  - 'description: str = ""'
+  description: Create a new External EPG in ACI
+- tool: aci_subnet_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/BD-{bd_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'bd_name: str'
+  - 'subnet_ip: str'
+  - 'scope: str = "public"'
+  - 'description: str = ""'
+  description: Create a new subnet in a Bridge Domain
+- tool: aci_vlan_pool_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/infra.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'pool_name: str'
+  - 'vlan_start: int'
+  - 'vlan_end: int'
+  - 'allocation_mode: str = "static"'
+  - 'description: str = ""'
+  description: Create a new VLAN pool in ACI
+- tool: aci_physical_domain_create
+  category: write
+  rest:
+  - POST /api/node/mo/uni/phys.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'domain_name: str'
+  - 'vlan_pool_name: str'
+  - 'description: str = ""'
+  description: Create a new Physical Domain in ACI
+- tool: aci_tenant_delete
+  category: delete
+  rest:
+  - POST /api/node/mo/uni.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  description: Delete a tenant from ACI (use with caution!)
+- tool: aci_epg_delete
+  category: delete
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}/ap-{app_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'app_name: str'
+  - 'epg_name: str'
+  description: Delete an EPG from ACI
+- tool: aci_contract_delete
+  category: delete
+  rest:
+  - POST /api/node/mo/uni/tn-{tenant_name}.json
+  binding: direct
+  confidence: high
+  parameters:
+  - 'tenant_name: str'
+  - 'contract_name: str'
+  description: Delete a contract from ACI
+mcp_only:
+- tool: aci_simple_test
+  category: connection
+  reason: Local helper — returns server-side information and makes no APIC call.
+  description: Simple test tool for ACI connectivity
+- tool: aci_create_3tier_app
+  category: composite
+  reason: Composite tool — fans out to other tools in this server rather than calling one APIC endpoint.
+  description: Create a complete 3-tier application (Web, App, DB) with contracts
+- tool: aci_create_web_app_stack
+  category: composite
+  reason: Composite tool — fans out to other tools in this server rather than calling one APIC endpoint.
+  description: Create a complete web application stack with connectivity
+- tool: aci_get_operations_summary
+  category: introspection
+  reason: Local helper — returns server-side information and makes no APIC call.
+  description: Get a summary of all available ACI operations
+rest_only:
+- note: 'Not enumerable. The APIC REST API is addressed by managed-object class and distinguished name over the
+    whole Management Information Tree (see https://developer.cisco.com/site/apic-mim-ref-api/), not by a fixed operation
+    list, so a complete rest_only[] cannot be derived without a spec. What is measurable: the MCP server touches
+    20 distinct MO classes (fvTenant, fvAp, fvAEPg, fvBD, fvCtx, fvSubnet, vzBrCP, vzSubj, vzFilter, vzEntry, fvCEp,
+    faultSummary, fabricNode, fabricHealthTotal, fabricLink, l1PhysIf, ethpmPhysIf, fvnsVlanInstP, physDomP, l3extOut,
+    l3extInstP, bgpPeerEntry) out of the full model.'

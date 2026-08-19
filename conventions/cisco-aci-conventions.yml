@@ -1,0 +1,141 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+docs: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+note: >-
+  Cross-cutting runtime semantics for the Cisco APIC REST API, read from the published REST API
+  Configuration Guide on 2026-08-19 and cross-checked against Cisco's own public Postman workspace
+  (https://www.postman.com/cisco-dcn-marketing-enablement/cisco-aci-public/overview), whose requests use the
+  same query operators verbatim.
+api_style: >-
+  Model-driven REST over a single object tree. Every request addresses either one managed object by its
+  distinguished name (/api/mo/<dn>.<fmt>) or every instance of a class (/api/class/<class>.<fmt>). The
+  literal string /mo or /class selects which. /api/node/... is the equivalent node-scoped form used by the
+  CiscoDevNet MCP server.
+content_negotiation:
+  style: file-extension
+  formats:
+  - json
+  - xml
+  detail: >-
+    The response format is selected by the URI suffix, not by an Accept header — /api/class/fvTenant.json
+    versus /api/class/fvTenant.xml. Both request and response payloads carry the same MO tree.
+  envelope: >-
+    Every response is wrapped in a root element named imdata. The guide is explicit that "This element is
+    merely a container for the response; it is not a class in the management information model (MIM)."
+auth:
+  style: session-cookie
+  detail: aaaLogin issues a token presented as the APIC-cookie cookie; refreshed with aaaRefresh.
+  see: authentication/cisco-aci-authentication.yml
+idempotency:
+  supported: true
+  mechanism: declarative-model
+  header: null
+  detail: >-
+    Cisco documents idempotency as a property of the methods themselves, not as a client-supplied key. From
+    the guide: "Standard REST methods are supported on the API, which includes POST, GET, and DELETE
+    operations through HTTP. The POST and DELETE methods are idempotent, meaning that there is no additional
+    effect if they are called more than once with the same input parameters. The GET method is nullipotent."
+    Because a POST declares the desired state of a managed object at a distinguished name, replaying the
+    same POST converges on the same tree rather than creating a duplicate.
+  what_is_missing: >-
+    There is no Idempotency-Key header, no request-deduplication window and no replay-safe response cache.
+    Idempotency here is a guarantee about the shape of the write, not a retry-safety token — an agent
+    retrying a failed composite provisioning sequence gets convergence on each individual MO but no
+    all-or-nothing transaction across them.
+  scope: per managed object (distinguished name)
+  retention: not applicable — no key is stored
+pagination:
+  supported: true
+  style: page-number
+  params:
+  - name: page
+    description: The page to return, in groups sized by page-size.
+  - name: page-size
+    description: Number of objects per page.
+  response_fields: >-
+    imdata carries the page of objects; totalCount on the response reports the full result size.
+  observed_example: >-
+    Cisco's public Postman collection "Webinar Query Demos" issues
+    /api/class/faultInst.xml?rsp-prop-include=naming-only&order-by=faultInst.code|asc&page-size=3&page=0
+sorting:
+  supported: true
+  param: order-by
+  syntax: 'order-by=classname.property[|{asc|desc}][,classname.property[|{asc|desc}]]...'
+filtering:
+  supported: true
+  detail: >-
+    Query scoping is expressed entirely as URI parameters appended after ? and joined with &. These are the
+    APIC equivalent of sparse fieldsets and expansion.
+  params:
+  - name: query-target
+    values: [self, children, subtree]
+    description: Scope of the query.
+  - name: target-subtree-class
+    description: Respond only with elements of the named class.
+  - name: query-target-filter
+    description: 'Respond only with elements matching a filter expression, e.g. eq(fvSubnet.scope,"public").'
+  - name: rsp-subtree
+    values: [no, children, full]
+    description: How much of the child tree to include in the response.
+  - name: rsp-subtree-class
+    description: Restrict the returned subtree to named classes.
+  - name: rsp-subtree-filter
+    description: Filter the returned subtree by property expression.
+  - name: rsp-subtree-include
+    values: [faults, health, stats, 'and others']
+    description: Request additional derived objects alongside the configuration.
+  - name: rsp-prop-include
+    values: [config-only, naming-only, all]
+    description: Sparse-field control over which properties are returned.
+  - name: time-range
+    values: ['24h', 1week, 1month, 3month, range]
+    description: Time window for historical/statistical queries.
+expansion:
+  supported: true
+  param: rsp-subtree
+  detail: rsp-subtree=full expands the whole child tree in one request, in place of N follow-up calls.
+metadata:
+  supported: true
+  detail: >-
+    Arbitrary tags can be attached to any managed object (tagInst) and queried back with
+    /api/tag/<tag>.xml or /api/tag/mo/<dn>.xml. An ownerTag/ownerKey pair can be set on writes so audit-log
+    entries attribute the change to the calling automation.
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id or correlation header is documented. Traceability is provided instead by the APIC audit
+    log (aaaModLR records), by the ownerTag/ownerKey attributes on writes, and by the built-in API Inspector
+    in the APIC GUI, which shows the exact API interchange behind any GUI action.
+versioning:
+  style: product-release
+  in_url: false
+  detail: >-
+    The API is not versioned in the URI or by a header. It is versioned with the controller: the object
+    model that the API exposes is whatever the installed APIC release ships, and Cisco publishes a separate
+    Management Information Model Reference per release train (currently 6.x). Clients discover the running
+    version by querying the firmwareCtrlrRunning class.
+  discovery:
+    method: GET
+    path: /api/node/class/firmwareCtrlrRunning.json
+  see: lifecycle/cisco-aci-lifecycle.yml
+errors:
+  envelope: imdata
+  format: cisco-imdata-error
+  rfc9457: false
+  detail: >-
+    Errors are returned inside the same imdata envelope as success responses, as an error object carrying
+    code and text attributes, alongside the HTTP status. There is no application/problem+json.
+  see: errors/cisco-aci-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  detail: >-
+    No RateLimit-* / X-RateLimit-* / Retry-After headers are documented. Throttling is a controller-side
+    policy the operator configures, and exhaustion surfaces as a connection refusal or a 503 rather than as
+    a standardized signal.
+  see: rate-limits/cisco-aci-rate-limits.yml
+events:
+  supported: true
+  style: websocket-subscription
+  detail: 'Any query can be turned into a live subscription with ?subscription=yes over a WebSocket (RFC 6455).'
+  see: asyncapi/cisco-aci-event-subscriptions.yml

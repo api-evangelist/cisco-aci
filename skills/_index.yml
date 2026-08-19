@@ -1,0 +1,28 @@
+generated: '2026-08-19'
+method: searched
+source: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community/blob/main/AGENTS.md
+note: >-
+  One provider-published agent instruction file was found and saved verbatim; two skills were generated from
+  it. Cisco publishes no OpenAPI for ACI, so the generated skills are grounded in the 47 MCP tool names and
+  the literal APIC REST paths read from the published scripts/server.py (see
+  mcp/cisco-aci-tool-crosswalk.yml) rather than in operationIds. No tool name, parameter or endpoint below
+  was invented — every one appears in the published source.
+skills:
+- file: skills/cisco-aci-AGENTS.md
+  name: Cisco ACI MCP Server (provider-published AGENTS.md)
+  method: searched
+  source: https://raw.githubusercontent.com/CiscoDevNet/mcp_server_cisco_aci_community/main/AGENTS.md
+  fetched: '2026-08-19'
+  verbatim: true
+  note: >-
+    Saved exactly as published. Note the caveat it carries: the repo README states the project "is not
+    officially supported by any Cisco Business or Technical entity", and the file advertises 50 operations
+    where the source registers 47.
+- file: skills/cisco-aci-provision-three-tier-application.md
+  name: Provision a three-tier application in a tenant
+  method: generated
+  grounded_in: mcp/cisco-aci-tool-crosswalk.yml
+- file: skills/cisco-aci-triage-fabric-faults.md
+  name: Triage fabric faults and health
+  method: generated
+  grounded_in: mcp/cisco-aci-tool-crosswalk.yml

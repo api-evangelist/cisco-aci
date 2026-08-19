@@ -1,0 +1,70 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/support/cloud-systems-management/application-policy-infrastructure-controller-apic/products-release-notes-list.html
+scheme: 'per-release release notes — major(minor)patch, e.g. 6.2(1g)'
+current_version: 6.2(1g)
+current_version_date: '2026-01-12'
+note: >-
+  ACI has no API changelog. It has product release notes, one document per release, each opening with a
+  dated "New and Changed Information" table recording every revision to that document. The entries below are
+  transcribed from those tables as read on 2026-08-19. Two trains are live in parallel: 6.2(x), the current
+  feature train, and 6.1(x), still receiving maintenance releases — 6.1(6f) shipped on 2026-08-14, seven
+  months after 6.2(1g).
+cadence: >-
+  Roughly quarterly patch releases per train, with documentation revisions between them. Release notes are
+  updated in place, so the dated table is the real change record.
+machine_readable: false
+machine_readable_note: >-
+  No RSS/Atom feed, no JSON changelog and no versioned API diff. The release-notes index page itself renders
+  its list client-side, so even the list of releases is not crawlable — the individual release-note URLs are
+  the only stable, fetchable artifacts.
+entries:
+- version: 6.1(6)
+  date: '2026-08-14'
+  type: release
+  highlight: Release 6.1(6f) became available.
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-616.html
+- version: 6.2(1)
+  date: '2026-08-04'
+  type: documentation
+  highlight: Updated the Miscellaneous compatibility information table with the recommended CIMC version for
+    M3/L3, M4/L4, and G5 servers.
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-621.html
+- version: 6.1(5)
+  date: '2026-08-10'
+  type: documentation
+  highlight: Updated the Miscellaneous compatibility information table with the recommended CIMC version for
+    M3/L3, M4/L4, and G5 servers.
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-615.html
+- version: 6.1(4)
+  date: '2026-03-29'
+  type: release
+  highlight: 'Release 6.1(4) adds support for the APIC-G5 servers; for the new ACI-mode switch hardware
+    features see the Cisco Nexus 9000 ACI-Mode Switches Release Notes, Release 16.1(4).'
+  breaking: false
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-614.html
+- version: 6.2(1)
+  date: '2026-01-16'
+  type: documentation
+  highlight: Updated the Virtualization compatibility information table to indicate support for newer AOS and
+    Prism Central versions.
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-621.html
+- version: 6.2(1g)
+  date: '2026-01-12'
+  type: release
+  highlight: Release 6.2(1g) became available — first release of the 6.2 train.
+  breaking: false
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-621.html
+- version: 6.1(5e)
+  date: '2025-12-15'
+  type: release
+  highlight: Release 6.1(5e) became available.
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-615.html
+- version: 6.1(3)
+  date: '2025-10-24'
+  type: release
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-613.html
+- version: 6.1(1)
+  date: '2025-09-29'
+  type: release
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-apic-release-notes-611.html

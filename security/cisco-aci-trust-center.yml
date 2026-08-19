@@ -1,0 +1,69 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/about/trust-center.html
+note: >-
+  The automated trust-center probe (probe-security-programs.py) returned no hit for this slug, because
+  Cisco's trust surface is not at trust.cisco.com or /trust — it is split across the Trust Center, a separate
+  Trust Portal on its own hostname, and the Global Government Certifications pages where the
+  product-specific certifications actually live. All four were fetched and verified by hand on 2026-08-19.
+  The certifications recorded below name Cisco ACI / APIC explicitly; Cisco-wide programs that do not name
+  this product are noted as such rather than credited to it.
+trust_center:
+  url: https://www.cisco.com/c/en/us/about/trust-center.html
+  status: 200
+trust_portal:
+  url: https://trustportal.cisco.com/
+  status: 200
+  detail: >-
+    Self-service access to Cisco's security, data-privacy and compliance documents. Document retrieval is
+    behind the portal UI, not a machine-readable feed.
+compliance_page:
+  url: https://www.cisco.com/c/en/us/about/trust-center/compliance.html
+  status: 200
+  detail: >-
+    Describes the Cisco Cloud Controls Framework (CCF), a "build-once-use-many" control set Cisco uses to
+    certify SaaS solutions, and links to the Trust Portal. The served HTML is a thin shell — the certified
+    solution list renders client-side, so it is not readable by a machine.
+certifications:
+- name: Common Criteria EAL2+ (ALC_FLR.2)
+  scope: Cisco N9000 Switch Series with ACI mode, APIC 6.1(2g) and NX-OS software-ACI 16.1(2g)
+  certified: '2025-05-16'
+  expires: '2030-05-16'
+  product_named: true
+  source: https://www.cisco.com/c/en/us/solutions/industries/government/global-government-certifications/common-criteria.html
+- name: Common Criteria EAL2
+  scope: Cisco N9000 Switch Series with ACI mode, APIC and Nexus 2000 Fabric Extenders (NSCIB-21-163806)
+  certified: '2021-02-02'
+  expires: '2026-02-02'
+  product_named: true
+  source: https://www.cisco.com/c/en/us/solutions/industries/government/global-government-certifications/common-criteria.html
+- name: FIPS 140 (certificate 4747)
+  scope: APIC/ACI Controller running v6.1
+  certified: '2025-06-16'
+  product_named: true
+  source: https://www.cisco.com/c/en/us/solutions/industries/government/global-government-certifications/fips-140.html
+- name: FIPS 140
+  scope: N9000 APIC/ACI Controller running v6.0
+  certified: '2022-09-26'
+  product_named: true
+  source: https://www.cisco.com/c/en/us/solutions/industries/government/global-government-certifications/fips-140.html
+programs:
+- name: Cisco Cloud Controls Framework (CCF)
+  product_named: false
+  detail: Cisco-wide control framework for SaaS certification. Not ACI-specific.
+  url: https://www.cisco.com/c/en/us/about/trust-center/compliance.html
+- name: Cisco PSIRT security vulnerability policy
+  product_named: false
+  url: https://sec.cloudapps.cisco.com/security/center/resources/security_vulnerability_policy.html
+- name: CSAF advisory publication
+  product_named: false
+  detail: >-
+    Cisco publishes machine-readable security advisories under the Common Security Advisory Framework,
+    advertised from security.txt.
+  url: https://www.cisco.com/.well-known/csaf/provider-metadata.json
+machine_readable:
+  certifications_feed: false
+  detail: >-
+    Every certification above was read out of an HTML table on a marketing page. There is no JSON/CSV feed
+    of Cisco certifications, and the Trust Portal does not expose an anonymous API — an agent cannot verify
+    a Cisco compliance claim without a human in the loop.

@@ -1,0 +1,188 @@
+generated: '2026-08-19'
+method: derived
+source: >-
+  Derived from the distinguished-name paths in
+  https://github.com/CiscoDevNet/mcp_server_cisco_aci_community/blob/main/scripts/server.py and the request
+  URLs in Cisco's public Postman workspace
+  (https://www.postman.com/cisco-dcn-marketing-enablement/cisco-aci-public/overview), cross-checked against
+  the APIC Management Information Model Reference at https://developer.cisco.com/site/apic-mim-ref-api/.
+docs: https://developer.cisco.com/site/apic-mim-ref-api/
+note: >-
+  There is no OpenAPI to walk $refs through, but ACI's data model is unusually recoverable without one: the
+  API addresses objects by distinguished name, and a DN literally spells out the containment path. From
+  /api/node/mo/uni/tn-{tenant}/ap-{app}/epg-{epg}.json you can read that an EPG belongs to an application
+  profile which belongs to a tenant. Every relationship below is read from a real DN or a real
+  relationship-object class name observed in published code, not inferred from documentation prose. This is
+  a partial model — the MIT holds thousands of classes; these are the 22 an integrator meets first.
+root:
+  dn: uni
+  detail: The policy universe. Every configurable object is a descendant of uni.
+addressing:
+  by_object: /api/mo/<dn>.json
+  by_class: /api/class/<className>.json
+  node_scoped: /api/node/mo/<dn>.json and /api/node/class/<className>.json
+  dn_prefixes:
+    tenant: tn-
+    application_profile: ap-
+    endpoint_group: epg-
+    bridge_domain: BD-
+    vrf: ctx-
+    contract: brc-
+    contract_subject: subj-
+    filter: flt-
+    filter_entry: e-
+    l3out: out-
+    external_epg: instP-
+    vlan_pool: 'infra (under uni/infra)'
+    physical_domain: 'phys (under uni/phys)'
+entities:
+- class: fvTenant
+  name: Tenant
+  dn: uni/tn-{name}
+  detail: Top-level isolation container for policy.
+- class: fvAp
+  name: Application Profile
+  dn: uni/tn-{tenant}/ap-{name}
+- class: fvAEPg
+  name: Endpoint Group (EPG)
+  dn: uni/tn-{tenant}/ap-{app}/epg-{name}
+- class: fvBD
+  name: Bridge Domain
+  dn: uni/tn-{tenant}/BD-{name}
+- class: fvCtx
+  name: VRF / Context
+  dn: uni/tn-{tenant}/ctx-{name}
+- class: fvSubnet
+  name: Subnet
+  dn: uni/tn-{tenant}/BD-{bd}/subnet-[{ip}]
+- class: vzBrCP
+  name: Contract
+  dn: uni/tn-{tenant}/brc-{name}
+- class: vzSubj
+  name: Contract Subject
+  dn: uni/tn-{tenant}/brc-{contract}/subj-{name}
+- class: vzFilter
+  name: Filter
+  dn: uni/tn-{tenant}/flt-{name}
+- class: vzEntry
+  name: Filter Entry
+  dn: uni/tn-{tenant}/flt-{filter}/e-{name}
+- class: l3extOut
+  name: L3Out (external routed network)
+  dn: uni/tn-{tenant}/out-{name}
+- class: l3extInstP
+  name: External EPG
+  dn: uni/tn-{tenant}/out-{l3out}/instP-{name}
+- class: fvCEp
+  name: Client Endpoint
+  detail: A learned endpoint (MAC/IP) attached to an EPG. Operational, not configured.
+- class: fvnsVlanInstP
+  name: VLAN Pool
+  dn: uni/infra/vlanns-[{name}]-{mode}
+- class: physDomP
+  name: Physical Domain
+  dn: uni/phys-{name}
+- class: fabricNode
+  name: Fabric Node
+  detail: A leaf, spine or APIC in the fabric.
+- class: fabricLink
+  name: Fabric Link
+- class: fabricHealthTotal
+  name: Fabric Health Score
+- class: l1PhysIf
+  name: Physical Interface
+- class: ethpmPhysIf
+  name: Ethernet Interface State
+- class: bgpPeerEntry
+  name: BGP Peer
+- class: faultInst
+  name: Fault Instance
+  detail: See errors/cisco-aci-problem-types.yml — faults attach to the MO they concern.
+relationships:
+- from: fvAp
+  to: fvTenant
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/ap-{app}'
+- from: fvAEPg
+  to: fvAp
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/ap-{app}/epg-{epg}'
+- from: fvBD
+  to: fvTenant
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/BD-{bd}'
+- from: fvCtx
+  to: fvTenant
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/ctx-{vrf}'
+- from: fvBD
+  to: fvCtx
+  type: has_one
+  via: fvRsCtx (relationship object, tnFvCtxName)
+- from: fvSubnet
+  to: fvBD
+  type: belongs_to
+  via: 'DN containment under BD-{bd}'
+- from: fvAEPg
+  to: fvBD
+  type: has_one
+  via: fvRsBd (relationship object, tnFvBDName)
+- from: fvAEPg
+  to: vzBrCP
+  type: has_many
+  via: fvRsProv (provides) and fvRsCons (consumes)
+  detail: >-
+    The provider/consumer split is the core of ACI's policy model — an EPG provides a contract, another
+    consumes it, and traffic is permitted only where those meet.
+- from: fvAEPg
+  to: physDomP
+  type: has_many
+  via: fvRsDomAtt (tDn pointing at uni/phys-{domain} or a VMM domain)
+- from: vzSubj
+  to: vzBrCP
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/brc-{contract}/subj-{subject}'
+- from: vzSubj
+  to: vzFilter
+  type: has_many
+  via: vzRsSubjFiltAtt (tnVzFilterName)
+- from: vzEntry
+  to: vzFilter
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/flt-{filter}/e-{entry}'
+- from: l3extOut
+  to: fvTenant
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/out-{l3out}'
+- from: l3extOut
+  to: fvCtx
+  type: has_one
+  via: l3extRsEctx (tnFvCtxName)
+- from: l3extInstP
+  to: l3extOut
+  type: belongs_to
+  via: 'DN containment: uni/tn-{tenant}/out-{l3out}/instP-{extEpg}'
+- from: physDomP
+  to: fvnsVlanInstP
+  type: has_one
+  via: infraRsVlanNs (tDn pointing at uni/infra/vlanns-[{pool}]-{mode})
+- from: fvCEp
+  to: fvAEPg
+  type: belongs_to
+  via: Learned endpoint attaches to the EPG it resolves into.
+- from: faultInst
+  to: any
+  type: belongs_to
+  via: A fault is created as a child of the managed object it concerns.
+conventions:
+  relationship_objects: >-
+    ACI does not use foreign-key fields. A relationship is itself a managed object whose class name starts
+    with a two-part prefix — fvRs*, vzRs*, l3extRs*, infraRs* — and which carries either a tnXxxName (a name
+    within the same tenant) or a tDn (a full distinguished name elsewhere in the tree). Reading the model
+    means reading the Rs objects.
+  status_attribute: >-
+    Writes carry a status attribute on the MO — absent/created/modified for upserts, "deleted" to remove.
+    This is why DELETE semantics are frequently expressed as a POST with status:deleted, as the CiscoDevNet
+    MCP server's delete tools do.
+render: null
+render_note: No subway/ diagram exists in this repository for ACI.

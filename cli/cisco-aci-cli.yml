@@ -1,0 +1,72 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/1-x/cli/nx/cfg/b_APIC_NXOS_CLI_User_Guide.html
+docs:
+- https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/1-x/cli/nx/cfg/b_APIC_NXOS_CLI_User_Guide.html
+- https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/getting-started/cisco-apic-getting-started-guide-62x/initial-setup/access-the-nx-os-style-cli.html
+name: APIC NX-OS style CLI
+official: true
+note: >-
+  ACI's CLI is not a downloadable API client — it is built into the controller and reached over SSH. That
+  distinction matters for an integrator: there is no `brew install`, no npm binary, and nothing to run in
+  CI without network access to an APIC. It is included here because it is a genuine first-party command
+  surface over the same object model as the REST API, and Cisco documents it as such.
+install:
+  method: built-in
+  detail: >-
+    Ships on the APIC. Access it by SSH to the controller's out-of-band or in-band management address as an
+    APIC user; the NX-OS style CLI is the default shell in current releases.
+  command: 'ssh <apic-username>@<apic-hostname>'
+structure:
+  style: NX-OS mode hierarchy
+  detail: >-
+    "The NX-OS style CLI is organized in a hierarchy of command modes with EXEC mode as the root, containing
+    a tree of configuration submodes beginning with global configuration mode." Commands are entered by
+    descending into the mode that owns the object.
+  modes:
+  - name: EXEC
+    detail: Root mode — show commands, operational actions.
+  - name: global configuration
+    detail: Entered with `configure` / `configure terminal`; parent of every configuration submode.
+  - name: object submodes
+    detail: 'e.g. tenant, application, epg, bridge-domain, vrf, contract, filter, leaf, interface-policy-group.'
+command_groups:
+- name: tenancy and policy
+  examples:
+  - tenant <name>
+  - application <name>
+  - epg <name>
+  - bridge-domain <name>
+  - vrf context <name>
+  - contract <name>
+- name: fabric and access
+  examples:
+  - leaf <node-id>
+  - interface ethernet <x/y>
+  - vlan-domain <name>
+- name: external connectivity
+  detail: >-
+    Layer 3 external connectivity has two CLI modes. Cisco documents that "Implicit mode ... is not
+    compatible with the APIC GUI or REST API" while "Named mode ... is compatible with the APIC GUI and the
+    REST API" — a real interoperability trap for anyone mixing CLI and API automation.
+- name: management interfaces
+  detail: In-band and out-of-band management configuration.
+- name: monitoring
+  examples:
+  - show faults
+  - show health
+related_tools:
+- name: acitoolkit CLI utilities
+  detail: >-
+    The Cisco-authored acitoolkit Python package ships command-line utilities that talk to the APIC REST
+    API from a workstation. Last released 2017 — see packages/cisco-aci-packages.yml.
+  url: https://github.com/datacenter/acitoolkit
+- name: Visore (Managed Object Browser)
+  detail: >-
+    A browser-based MO browser built into the APIC for running queries against the MIT interactively — the
+    closest thing ACI has to an API console.
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+- name: API Inspector
+  detail: >-
+    Built into the APIC GUI. Shows the exact REST interchange behind every GUI action so it can be replayed
+    as automation — ACI's substitute for published request examples.

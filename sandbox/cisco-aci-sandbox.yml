@@ -1,0 +1,60 @@
+generated: '2026-08-19'
+method: probed
+source: https://sandboxapicdc.cisco.com/
+docs: https://devnetsandbox.cisco.com/DevNet/catalog/aci-simulator-always-on
+note: >-
+  Cisco DevNet runs a free, always-on ACI sandbox: a live APIC controller on the public internet that anyone
+  can call without owning hardware. Confirmed live on 2026-08-19 — https://sandboxapicdc.cisco.com/ returned
+  200 and https://sandboxapicdc.cisco.com/api/class/fvTenant.json returned 403 (authentication required, so
+  the API is answering). This is genuinely unusual for infrastructure of this class and is the single
+  strongest developer-experience asset ACI has.
+sandbox_available: true
+model: shared-always-on-plus-reservable
+environments:
+- id: aci-simulator-always-on
+  name: ACI Simulator (always-on)
+  host: sandboxapicdc.cisco.com
+  base_url: https://sandboxapicdc.cisco.com/api
+  reservation_required: false
+  cost: free
+  catalog_url: https://devnetsandbox.cisco.com/DevNet/catalog/aci-simulator-always-on
+  evidence:
+  - url: https://sandboxapicdc.cisco.com/
+    status: 200
+  - url: https://sandboxapicdc.cisco.com/api/class/fvTenant.json
+    status: 403
+    detail: Auth-gated, as expected — an aaaLogin session is required.
+  credentials:
+    published: true
+    captured: false
+    detail: >-
+      DevNet publishes the shared sandbox username and password on the sandbox catalog page. Those values
+      were NOT transcribed into this repository: the catalog page at devnetsandbox.cisco.com is a
+      client-rendered single-page application (the served HTML is a Monaco/JS shell, 5.5KB, with no
+      credential text in it), so the values could not be read from the served document, and API Evangelist
+      does not republish credentials it has not fetched. Read them from the catalog page.
+    login_endpoint: 'POST https://sandboxapicdc.cisco.com/api/aaaLogin.json'
+- id: reserved-aci-sandboxes
+  name: Reservable ACI sandboxes
+  reservation_required: true
+  cost: free
+  catalog_url: https://devnetsandbox.cisco.com/
+  detail: >-
+    DevNet also offers time-boxed reserved ACI environments for destructive testing. Reservation requires a
+    free Cisco/DevNet account.
+test_data:
+  fixtures: false
+  detail: >-
+    No test fixtures, seeded objects, magic identifiers or trigger tooling are published. The always-on
+    sandbox is a shared simulator carrying whatever tenants previous users left behind, which is a real
+    caveat: tests cannot assume a clean fabric, and the environment is read-mostly by convention.
+  test_vs_live_keys: false
+  test_vs_live_note: >-
+    There is no test-mode/live-mode key concept. The same aaaLogin flow and the same credentials model apply
+    to a sandbox APIC and a production APIC — the only thing separating them is which hostname you point at.
+simulator:
+  name: Cisco ACI Simulator
+  detail: >-
+    Cisco also ships a downloadable/licensable ACI Simulator VM with its own release notes, for customers who
+    want a private fabric to develop against.
+  release_notes: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/6x/release-notes/cisco-aci-simulator-release-notes-615.html

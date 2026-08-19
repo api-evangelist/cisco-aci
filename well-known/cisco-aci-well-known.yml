@@ -1,0 +1,102 @@
+generated: '2026-08-19'
+method: probed
+source: https://www.cisco.com/.well-known/security.txt
+note: >-
+  Probed every /.well-known/ path plus /llms.txt against both hosts that serve Cisco ACI's public surface:
+  developer.cisco.com (the DevNet ACI developer center) and www.cisco.com (the corporate/product host). The
+  ACI API itself has no public host — the APIC controller is customer-operated — so the DevNet always-on
+  sandbox host sandboxapicdc.cisco.com was probed as the closest live API host. Two real documents were
+  found and saved: an RFC 9116 security.txt (PGP-signed, Cisco PSIRT) and an llms.txt listing Cisco's data
+  center priority pages, with Application Centric Infrastructure as the first entry.
+hosts:
+- host: www.cisco.com
+  probes:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain
+    file: well-known/cisco-aci-security.txt
+    document: true
+  - path: /llms.txt
+    status: 200
+    content_type: text/plain
+    file: llms/cisco-aci-llms.txt
+    document: true
+  - path: /.well-known/csaf/provider-metadata.json
+    status: 200
+    content_type: application/json
+    document: true
+    note: >-
+      CSAF (Common Security Advisory Framework) provider metadata, advertised by the Policy/CSAF fields of
+      security.txt. Not saved as a separate artifact — it is a Cisco-wide advisory feed, not ACI-specific.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: developer.cisco.com
+  probes:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /openapi.json
+    status: 404
+- host: sandboxapicdc.cisco.com
+  note: DevNet always-on ACI sandbox APIC — the closest thing to a public API host for this product.
+  probes:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /swagger.json
+    status: 404
+  - path: /api-docs
+    status: 404
+  - path: /api/class/fvTenant.json
+    status: 403
+    note: Reachable but authentication-gated — an aaaLogin session is required.
+findings:
+- id: security-txt-served
+  observed: true
+  detail: >-
+    RFC 9116 security.txt served at https://www.cisco.com/.well-known/security.txt, PGP-signed, with
+    Contact mailto:psirt@cisco.com, an Encryption key URL, a Policy URL and a CSAF pointer. Expires
+    2027-01-01.
+- id: llms-txt-served
+  observed: true
+  detail: >-
+    https://www.cisco.com/llms.txt is a real 1,196-byte text/plain llms.txt naming five data-center
+    priority pages, Application Centric Infrastructure first.
+- id: llms-txt-markdown-twins-404
+  observed: true
+  detail: >-
+    Every entry in Cisco's llms.txt links to an `index.html.md` markdown twin. The ACI twin —
+    https://www.cisco.com/site/us/en/products/networking/cloud-networking/application-centric-infrastructure/index.html.md
+    — returned HTTP 404 on 2026-08-19 while the .html page it mirrors returned 200. The llms.txt advertises
+    an agent-readable surface that is not being served.
+- id: no-agent-card
+  observed: false
+  detail: >-
+    No A2A agent card at /.well-known/agent-card.json or the legacy /.well-known/agent.json on any of the
+    three hosts. No a2a/ artifact was written.

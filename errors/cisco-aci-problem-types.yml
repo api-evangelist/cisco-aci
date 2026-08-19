@@ -1,0 +1,113 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+docs:
+- https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+- https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/all/faults/guide/b_APIC_Faults_Errors/b_IFC_Faults_Errors_chapter_01.html
+- https://www.cisco.com/c/dam/en/us/td/docs/Website/datacenter/syslogref/index.html
+- https://developer.cisco.com/site/apic-mim-ref-api/
+format: cisco-imdata-error
+rfc9457: false
+note: >-
+  There is no OpenAPI to derive 4xx/5xx responses from, so this catalog is read from Cisco's published
+  documentation. Two distinct error systems exist and are easy to confuse: (1) HTTP/REST errors returned
+  synchronously inside the imdata envelope, and (2) the ACI FAULT system — thousands of numbered fault and
+  event codes raised asynchronously by the fabric and retrieved by querying the faultInst / faultSummary
+  classes. Both are catalogued below; only the first is an API error.
+envelope:
+  root: imdata
+  shape: '{"imdata": [{"error": {"attributes": {"code": "<numeric>", "text": "<human message>"}}}]}'
+  detail: >-
+    Errors reuse the same imdata container as successful responses. The HTTP status carries the class of
+    failure; the code/text attributes carry the APIC's own reason.
+http_statuses:
+- status: 200
+  meaning: Success. Note that a successful write returns 200 with an empty imdata array unless
+    rsp-subtree=modified is requested.
+- status: 400
+  meaning: Malformed request — invalid DN, unknown class, bad filter expression or invalid MO payload.
+- status: 401
+  meaning: Authentication failed at aaaLogin.
+- status: 403
+  meaning: >-
+    Forbidden. In practice the dominant cause is an expired API session rather than a permissions failure —
+    the CiscoDevNet ACI MCP server treats HTTP 403 as its trigger to re-run aaaLogin and retry. Also
+    returned for RBAC denials against the caller's security domain. Confirmed live: an unauthenticated GET
+    to https://sandboxapicdc.cisco.com/api/class/fvTenant.json returned 403 on 2026-08-19.
+- status: 503
+  meaning: >-
+    Query too large / result set could not be delivered. Documented verbatim in the guide's usage
+    guidelines.
+problem_types:
+- id: result-dataset-too-big
+  http_status: 503
+  title: Unable to process the query, result dataset is too big
+  documented_text: 'Unable to deliver the message, destination is not available / Unable to process the query,
+    result dataset is too big'
+  cause: >-
+    "On scale setups, if you send generic class queries to the Cisco APIC that result in a large set of
+    managed objects, the queries intermittently fail due to a timeout." Cisco states the APIC does not
+    respond with more than 100,000 objects, for REST API queries on a class that has more than 100,000
+    objects across the fabric.
+  remediation: >-
+    Scope the query before issuing it — add target-subtree-class, query-target-filter or rsp-prop-include,
+    or page the result with page/page-size — rather than retrying the unbounded class query.
+  source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+- id: session-expired
+  http_status: 403
+  title: API session token expired
+  cause: >-
+    The APIC session token has a refreshTimeoutSeconds lifetime (default 600s) and was not refreshed with
+    aaaRefresh inside the window.
+  remediation: Re-run POST /api/aaaLogin.json and replay the request with the new APIC-cookie value.
+  source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+- id: authentication-failed
+  http_status: 401
+  title: aaaLogin rejected
+  cause: Wrong username/password, or a login domain prefix that does not match a configured realm.
+  remediation: 'Query GET /api/aaaListDomains.json (anonymous) for valid login domains and retry.'
+  source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+- id: invalid-managed-object
+  http_status: 400
+  title: Invalid DN, class or property
+  cause: >-
+    The distinguished name, class name, property name or filter expression does not exist in the
+    Management Information Model of the running APIC release.
+  remediation: >-
+    Validate the class and its properties against the APIC Management Information Model Reference for the
+    installed release before writing.
+  source: https://developer.cisco.com/site/apic-mim-ref-api/
+fault_system:
+  is_api_error: false
+  detail: >-
+    Separately from HTTP errors, ACI raises FAULTS — numbered, severity-graded, lifecycle-managed objects
+    attached to the managed object that is unhealthy. They are not returned from the call that caused them;
+    they are queried back from the fault classes. This is the largest error surface ACI publishes and it is
+    fully documented, but it is an operational telemetry catalog, not a request/response error catalog.
+  classes:
+  - faultInst
+  - faultSummary
+  - faultDelegate
+  - faultRecord
+  severities:
+  - critical
+  - major
+  - minor
+  - warning
+  - info
+  retrieval:
+  - 'GET /api/node/class/faultSummary.json  # fault summary, used by the MCP server''s aci_faults_get'
+  - 'GET /api/class/faultInst.xml?order-by=faultInst.code|asc&page-size=3&page=0  # from Cisco''s public Postman collection'
+  - 'GET /api/mo/uni/tn-<tenant>.xml?query-target=subtree&target-subtree-class=fvAEPg&rsp-subtree=full&rsp-subtree-include=faults'
+  lookup_tool: https://www.cisco.com/c/dam/en/us/td/docs/Website/datacenter/syslogref/index.html
+  lookup_note: >-
+    Cisco publishes an interactive web lookup that resolves any APIC fault or event code to its cause,
+    recommended action, affected object and severity. It is a JavaScript form, not a downloadable registry —
+    there is no machine-readable fault-code file to harvest, so no fault codes are transcribed here.
+  reference: https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/all/faults/guide/b_APIC_Faults_Errors/b_IFC_Faults_Errors_chapter_01.html
+gaps:
+- No RFC 9457 application/problem+json.
+- No stable machine-readable error-code registry for HTTP-layer errors; codes appear only in prose examples.
+- >-
+  The fault catalog — thousands of codes with documented causes and remediations — is only reachable through
+  an interactive lookup form, so an agent cannot resolve a fault code it receives without a human.

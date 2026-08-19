@@ -1,0 +1,69 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/products/cloud-systems-management/application-policy-infrastructure-controller-apic/eos-eol-notice-listing.html
+docs:
+- https://www.cisco.com/c/en/us/products/eos-eol-policy.html
+- https://www.cisco.com/c/en/us/products/cloud-systems-management/application-policy-infrastructure-controller-apic/eos-eol-notice-listing.html
+- https://www.cisco.com/c/en/us/support/cloud-systems-management/application-policy-infrastructure-controller-apic/products-release-notes-list.html
+note: >-
+  ACI's API lifecycle is the product lifecycle. There is no independently versioned API to deprecate: the
+  contract is the object model of the installed APIC release, so "API deprecation" for ACI means a managed
+  object class or property changing between release trains, announced in the per-release "Changes in
+  behavior" section of the release notes rather than in an API changelog.
+versioning:
+  style: product-release
+  scheme: 'major(minor)patch — e.g. 6.2(1g), 6.1(6f)'
+  in_url: false
+  in_header: false
+  current_trains:
+  - version: 6.2(1)
+    first_available: '2026-01-12'
+    detail: Release 6.2(1g) became available.
+  - version: 6.1(6)
+    first_available: '2026-08-14'
+    detail: Release 6.1(6f) became available.
+  discovery:
+    method: GET
+    path: /api/node/class/firmwareCtrlrRunning.json
+    detail: Returns the running firmware version of each APIC instance.
+deprecation_policy:
+  published: true
+  url: https://www.cisco.com/c/en/us/products/eos-eol-policy.html
+  name: Cisco End-of-Life Policy
+  detail: >-
+    Cisco operates a formal, company-wide End-of-Sale / End-of-Life policy with published milestone dates —
+    End-of-Sale, End of Software Maintenance, End of Vulnerability/Security Support, Last Date of Support —
+    announced in an EoL notice ahead of each milestone. Product-specific notices for the APIC are listed at
+    the EoS/EoL notice page.
+  product_notices: https://www.cisco.com/c/en/us/products/cloud-systems-management/application-policy-infrastructure-controller-apic/eos-eol-notice-listing.html
+  http_headers:
+    sunset: false
+    deprecation: false
+    detail: >-
+      No RFC 8594 Sunset header and no Deprecation header are emitted or documented. Deprecation is
+      communicated as product documentation, not as a runtime signal an agent can read.
+sunset_header: false
+deprecated_operations: []
+deprecated_operations_note: >-
+  Cannot be derived — there is no OpenAPI carrying deprecated:true. Behavioral changes and removals are
+  listed per release in the "Changes in behavior" section of each APIC release note.
+status_page:
+  published: false
+  detail: >-
+    No status page applies. status.cisco.com exists but is "Cisco Cloud Status Tools", covering Cisco's
+    hosted cloud services; ACI is customer-operated infrastructure with no Cisco-run control plane to report
+    on. No StatusPage pointer was emitted — asserting one would credit Cisco with an availability surface
+    this product does not have.
+  probed:
+  - url: https://status.cisco.com/
+    status: 200
+    finding: Cisco Cloud Status Tools — no ACI/APIC component listed.
+sla:
+  published: false
+  detail: >-
+    No public API SLA. Availability is governed by the customer's own fabric design (the APIC is deployed as
+    a cluster of three or more controllers) and by their Cisco support contract tier, not by a published
+    uptime commitment.
+support:
+  url: https://www.cisco.com/c/en/us/support/index.html
+  psirt: https://sec.cloudapps.cisco.com/security/center/resources/security_vulnerability_policy.html

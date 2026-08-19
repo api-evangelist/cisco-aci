@@ -1,0 +1,88 @@
+generated: '2026-08-19'
+method: searched
+source: >-
+  Registry metadata endpoints queried 2026-08-19: galaxy.ansible.com/api/v3 (cisco.aci),
+  registry.terraform.io/v1/providers (CiscoDevNet/aci), pypi.org/pypi/acitoolkit/json,
+  api.github.com/repos (CiscoDevNet/*). PyPI was also queried for acicobra and pyaci — both 404.
+note: >-
+  Cisco does not ship conventional REST client SDKs for ACI in the npm / Maven / NuGet / crates.io sense.
+  The first-party automation surface is infrastructure-as-code: an Ansible collection and a Terraform
+  provider, both maintained in the CiscoDevNet GitHub org, plus the Cobra Python SDK which Cisco distributes
+  from the APIC controller itself rather than from a public registry. npm was probed for cisco-aci,
+  aci-client and node-aci — all 404.
+package_count: 5
+official_count: 4
+packages:
+- name: cisco.aci
+  language: ansible
+  registry: ansible-galaxy
+  url: https://galaxy.ansible.com/ui/repo/published/cisco/aci/
+  repository: https://github.com/CiscoDevNet/ansible-aci
+  official: true
+  version: 2.13.0
+  published: '2025-12-09'
+  downloads: 3382048
+  note: >-
+    The certified Ansible collection for ACI. Namespace `cisco`, source repo in the CiscoDevNet org, so
+    first-party. Galaxy reports 3.38M downloads and the collection tracks APIC releases.
+- name: CiscoDevNet/aci
+  language: terraform
+  registry: terraform-registry
+  url: https://registry.terraform.io/providers/CiscoDevNet/aci/latest
+  repository: https://github.com/CiscoDevNet/terraform-provider-aci
+  official: true
+  version: 2.20.0
+  published: '2026-06-23'
+  note: >-
+    First-party Terraform provider for ACI, published under the CiscoDevNet registry namespace. The most
+    actively released ACI client artifact — v2.20.0 shipped 2026-06-23.
+- name: acitoolkit
+  language: python
+  registry: pypi
+  url: https://pypi.org/project/acitoolkit/
+  repository: https://github.com/datacenter/acitoolkit
+  official: true
+  version: '0.4'
+  published: '2017-05-05'
+  note: >-
+    PyPI metadata lists the author as "Cisco Systems, Inc." and the home page as
+    datacenter.github.io/acitoolkit, so it is first-party. DECAY SIGNAL: the last PyPI release is 0.4 from
+    2017-05-05 — more than nine years behind the APIC releases it wraps (6.1(6) shipped 2026-08-14).
+- name: acicobra
+  language: python
+  registry: apic-hosted
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later.html
+  official: true
+  version: null
+  published: null
+  note: >-
+    The Cisco APIC Python SDK ("Cobra"), documented in the APIC REST API Configuration Guide as supporting
+    Python 2.7+ and 3.6+. Cisco distributes it as .egg/.whl files downloaded from the customer's own APIC
+    controller, not from a public registry — pypi.org/pypi/acicobra/json returned 404 on 2026-08-19, as did
+    pypi.org/pypi/pyaci/json. There is therefore no registry metadata endpoint to read a version or release
+    date from, and a consumer cannot tell which SDK version their controller will hand them. Recorded as
+    checked-and-absent, not unchecked.
+- name: mcp_server_cisco_aci_community
+  language: python
+  registry: github
+  url: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community
+  official: false
+  version: null
+  published: null
+  note: >-
+    The ACI MCP server. Published in the CiscoDevNet org but its own README states "This is a community
+    based project and is not officially supported by any Cisco Business or Technical entity", so
+    official:false. Distributed by `git clone` only — no PyPI package, and the GitHub releases API returns
+    zero releases, so there is no version to record. Repo created 2026-05-07, last push 2026-07-08.
+absent:
+- registry: npm
+  probed:
+  - cisco-aci
+  - aci-client
+  - node-aci
+  result: 404 — no first-party JavaScript client library published.
+- registry: pypi
+  probed:
+  - acicobra
+  - pyaci
+  result: 404 — the Cobra SDK is not on PyPI.

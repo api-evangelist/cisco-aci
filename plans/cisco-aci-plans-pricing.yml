@@ -1,0 +1,23 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/products/cloud-systems-management/application-policy-infrastructure-controller-apic/index.html
+plan_count: 0
+note: >-
+  Cisco publishes no public pricing, plans or tiers for ACI or the APIC controller, and there is no metered
+  API product to price — the REST API is an included interface of hardware and software the customer already
+  owns. The APIC product page carries "How to Buy" and "Contact Cisco" paths rather than a pricing table.
+  ACI is licensed through Cisco Data Center Networking software subscription tiers (Essentials / Advantage /
+  Premier) attached to the switches, and those tier prices are not published either — they are quoted
+  through Cisco or a partner. Recorded as an explicit zero rather than omitted: the absence is the finding.
+model: enterprise-quote
+free_tier:
+  available: false
+  detail: >-
+    There is no free or trial tier of the API itself. The nearest public access is the DevNet always-on ACI
+    sandbox, which is free to use but is a shared demo fabric, not a plan — see
+    sandbox/cisco-aci-sandbox.yml.
+plans: []
+evidence:
+- url: https://www.cisco.com/c/en/us/products/cloud-systems-management/application-policy-infrastructure-controller-apic/index.html
+  status: 200
+  detail: APIC product page — features and "How to Buy", no price.

@@ -1,0 +1,90 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+docs: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+note: >-
+  Derived from the published Cisco APIC REST API Configuration Guide (Release 4.2(x) and Later), chapter
+  "Using the REST API", read 2026-08-19. There is no OpenAPI securitySchemes block to derive from — Cisco
+  publishes no machine-readable contract for this API — so every field below is quoted from the human
+  documentation and cross-checked against the reference implementation in the CiscoDevNet ACI MCP server.
+api: Cisco APIC REST API
+transport: >-
+  HTTPS only by default. The guide states: "For security, only HTTPS is enabled as the default mode for API
+  communications. HTTP and HTTP-to-HTTPS redirection can be enabled if desired, but are less secure."
+schemes:
+- id: aaa-login-session-cookie
+  type: session-cookie
+  primary: true
+  name: APIC-cookie
+  in: cookie
+  description: >-
+    Username/password authentication against a special subset of request URIs — aaaLogin, aaaLogout and
+    aaaRefresh — used as the DN targets of a POST. The payload carries an aaaUser managed object with name
+    and pwd attributes. The response returns an authentication token both as a Set-Cookie header and as the
+    token attribute of the aaaLogin object (XPath /imdata/aaaLogin/@token). Subsequent requests present that
+    value as a cookie named APIC-cookie.
+  login:
+    method: POST
+    path: /api/aaaLogin.json
+    request_body: '{"aaaUser": {"attributes": {"name": "<username>", "pwd": "<password>"}}}'
+    encodings:
+    - json
+    - xml
+  logout:
+    method: POST
+    path: /api/aaaLogout.json
+  refresh:
+    method: POST or GET
+    path: /api/aaaRefresh.json
+    description: >-
+      The session must be refreshed within the timeout window or the token expires. The token changes on
+      every refresh.
+  session:
+    timeout_attribute: refreshTimeoutSeconds
+    default_timeout_seconds: 600
+    default_timeout_note: >-
+      "The default session timeout period is 600 seconds or 10 minutes." The aaaLogin response returns the
+      actual value in refreshTimeoutSeconds; the guide's worked example shows 300.
+    expiry_behavior: >-
+      An expired session returns HTTP 403. The CiscoDevNet ACI MCP server treats 403 as the signal to
+      re-run aaaLogin transparently.
+- id: gui-challenge-token
+  type: challenge-token
+  primary: false
+  name: APIC-challenge
+  in: header
+  alternate_in: query
+  alternate_name: challenge
+  description: >-
+    An optional additional token, requested by adding ?gui-token-request=yes to the aaaLogin call. The
+    response body then carries a "urlToken" attribute whose value must accompany every subsequent request in
+    this session, either as an APIC-challenge HTTP header or as a challenge= URI parameter. Applies to REST
+    API calls; not available to the browser.
+- id: login-domains
+  type: external-identity
+  primary: false
+  description: >-
+    The APIC supports authentication realms beyond the local user store. GET /api/aaaListDomains.json
+    returns the valid login domains for a controller (the guide's example returns "ExampleRadius" and
+    "local"), and the login name is prefixed with the domain to authenticate against RADIUS/TACACS+/LDAP.
+  discovery:
+    method: GET
+    path: /api/aaaListDomains.json
+    anonymous: true
+oauth2: false
+oauth2_note: >-
+  The APIC REST API does not use OAuth 2.0 or OpenID Connect, and declares no scopes. Authorization is
+  handled by the APIC's own RBAC model — security domains, roles and read/write privileges attached to the
+  aaaUser — not by bearer-token scopes. No scopes/ artifact was written; there is no scope surface to record.
+api_keys: false
+mtls:
+  supported: true
+  note: >-
+    The guide documents "Configuring a Custom Certificate for Cisco ACI HTTPS Access", and ACI additionally
+    supports X.509 certificate/signature-based API authentication for automation accounts. The certificate
+    is installed on the customer's own controller, so there is no public endpoint to probe.
+gaps:
+- No published OpenAPI securitySchemes block, so no machine-readable auth description exists.
+- >-
+  No OAuth/OIDC and no scoped tokens: an automation credential is a full APIC user, and least-privilege has
+  to be expressed through APIC RBAC roles rather than through the token itself.

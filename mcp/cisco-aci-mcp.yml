@@ -1,0 +1,91 @@
+generated: '2026-08-19'
+method: searched
+source: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community
+name: Community MCP Server for Cisco ACI
+status: published
+official: false
+official_note: >-
+  The repository lives in the CiscoDevNet GitHub organization, but its own README states plainly: "This is a
+  community based project and is not officially supported by any Cisco Business or Technical entity." Treated
+  as community, not first-party.
+description: >-
+  A stand-alone FastMCP server that sits between an MCP client and a customer's Cisco APIC controller,
+  exposing ACI policy and fabric operations as MCP tools. It authenticates to the APIC with cookie-based
+  aaaLogin session auth, re-authenticates transparently on HTTP 403, and calls the same
+  /api/node/class/... and /api/node/mo/... REST endpoints a human would.
+deployment:
+  mode: local-stdio
+  endpoint: null
+  install: "git clone https://github.com/CiscoDevNet/mcp_server_cisco_aci_community && ./setup.sh  # then: cd scripts && python3 server.py"
+  package: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community
+  auth: api-key
+  auth_note: >-
+    Not an MCP-layer auth scheme. The server reads APIC_URL, USERNAME and PASSWORD from scripts/.env and
+    performs an APIC aaaLogin, so the operator supplies controller credentials at install time. There is no
+    OAuth, no token issuance, and no anonymous mode.
+  verified: searched
+  verified_note: >-
+    Established by reading the published repository (README.md, AGENTS.md and scripts/server.py) on
+    2026-08-19. No live tools/list handshake was possible — the server is stdio-only and requires a reachable
+    APIC, so there is no hosted endpoint to POST to.
+  transports:
+  - stdio
+  requirements:
+  - Python 3.13+
+  - Reachable Cisco APIC (on-premises or DevNet sandbox)
+  - An APIC user with read and/or write privileges
+  dependencies:
+  - fastmcp
+  - httpx
+  - python-dotenv
+  - pydantic
+  - requests
+  clients_documented:
+  - VS Code / GitHub Copilot Chat (mcp.json, type stdio)
+  - Claude Desktop
+  - N8N
+repository:
+  url: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community
+  created: '2026-05-07'
+  last_push: '2026-07-08'
+  releases: 0
+  license: NOASSERTION
+  entrypoint: scripts/server.py
+  agents_md: AGENTS.md
+  security_md: SECURITY.md
+tools:
+  count_registered: 47
+  count_claimed: 50
+  discrepancy_note: >-
+    The README and AGENTS.md both advertise "50 ACI operations". scripts/server.py registers 47 functions
+    with the @mcp.tool() decorator (counted 2026-08-19 from the published source). The gap is recorded rather
+    than smoothed over: an agent planning against the documented count will find three tools that do not
+    exist. The full tool-to-REST binding is in mcp/cisco-aci-tool-crosswalk.yml.
+  schema_source: >-
+    Python type hints on the decorated functions in scripts/server.py. There is no published JSON inputSchema
+    document; the schemas are generated at runtime by FastMCP from those hints.
+  categories:
+  - name: Connection & test
+    count: 1
+  - name: Core infrastructure (read)
+    count: 12
+  - name: Fabric & infrastructure (read)
+    count: 8
+  - name: Core policy (create)
+    count: 13
+  - name: L3 networking
+    count: 6
+  - name: Advanced / composite
+    count: 7
+write_operations: true
+write_note: >-
+  This server is not read-only. It exposes tenant, EPG and contract deletion (aci_tenant_delete,
+  aci_epg_delete, aci_contract_delete) and composite provisioning tools (aci_create_3tier_app,
+  aci_create_web_app_stack) that write many managed objects in one call, against a production data-center
+  fabric, using whatever privileges the configured APIC account holds.
+alternatives_checked:
+- what: Cisco-hosted remote MCP endpoint for ACI
+  result: none found
+  detail: >-
+    No mcp.cisco.com or developer.cisco.com MCP endpoint was found for ACI on 2026-08-19, and no MCP URL is
+    advertised in Cisco's llms.txt or on the DevNet ACI developer center.

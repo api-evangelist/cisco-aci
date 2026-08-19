@@ -42,7 +42,12 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Cisco Application Centric Infrastructure (ACI) is Cisco's data-center SDN fabric, programmed through the APIC controller's REST API and its object model (the Management Information Tree). Cisco documents the APIC REST API on DevNet and ships Ansible collections, a Terraform provider and a community MCP server against it. The API is model-driven rather than OpenAPI-described: Cisco publishes the object model reference, not a machine-readable contract.
+Cisco Application Centric Infrastructure (ACI) is Cisco's data-center SDN fabric, programmed through the
+Application Policy Infrastructure Controller (APIC) and its object model, the Management Information Tree
+(MIT). Every APIC GUI, CLI and SDK action is executed through one REST interface: HTTPS requests to
+`/api/mo/<dn>.json` and `/api/class/<class>.json` on the customer-operated controller, authenticated with a
+cookie-based `aaaLogin` session token and refreshed with `aaaRefresh`. The API is model-driven rather than
+OpenAPI-described.
 
 ## Ownership
 
@@ -50,16 +55,38 @@ Part of the Cisco family.
 
 ## Contract status
 
-No anonymously fetchable machine-readable contract was found on 2026-08-19 (probed; real 404s). API Evangelist has not authored a substitute.
+**No anonymously fetchable machine-readable contract.** Re-probed on 2026-08-19: `/openapi.json`,
+`/openapi.yaml`, `/swagger.json`, `/v1/openapi.json`, `/api-docs` and every `/.well-known/*` path on
+`developer.cisco.com` returned 404, and the DevNet always-on APIC sandbox host `sandboxapicdc.cisco.com`
+returned 404 for `/openapi.json` and `/swagger.json` and 403 (auth required) for
+`/api/class/fvTenant.json`. Cisco publishes an exhaustive object-model reference and a public Postman
+workspace in place of a spec. API Evangelist has not authored a substitute.
+
+## What Cisco does publish
+
+- **APIC REST API Configuration Guide** — auth, query scoping, pagination, subscriptions, throttling.
+- **Management Information Model Reference** — every MO class, property, fault and event type, per release.
+- **A public Postman workspace** — "Cisco ACI - Public", 4 collections against `https://{{apic}}/api/...`.
+- **A WebSocket (RFC 6455) event surface** — any query becomes a live subscription with `?subscription=yes`.
+- **`security.txt` and `llms.txt`** on `www.cisco.com` — both real 200s, saved to this repo.
+- **Infrastructure-as-code clients** — the `cisco.aci` Ansible collection and the `CiscoDevNet/aci`
+  Terraform provider, both actively released.
+- **A community MCP server** in the CiscoDevNet org — stdio only, 47 registered tools.
+- **Product certifications** — Common Criteria EAL2+ for N9000/ACI mode with APIC 6.1(2g) and FIPS 140
+  certificate 4747 for APIC/ACI Controller v6.1.
 
 ## Verified links
 
-- [Portal](https://developer.cisco.com/docs/aci/)
-- [Documentation](https://developer.cisco.com/docs/aci/)
-- [APIReference](https://developer.cisco.com/docs/aci/)
-- [ParentCompany](https://apis.io/providers/cisco/)
-- [Ansible](https://github.com/CiscoDevNet/ansible-aci)
-- [MCPServer](https://github.com/CiscoDevNet/mcp_server_cisco_aci_community)
-- [Portal](https://developer.cisco.com/)
+- [Developer portal](https://developer.cisco.com/site/aci/)
+- [Documentation — APIC REST API Configuration Guide](https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later.html)
+- [API reference — APIC Management Information Model Reference](https://developer.cisco.com/site/apic-mim-ref-api/)
+- [Getting started](https://developer.cisco.com/docs/aci/getting-started/)
+- [Postman — Cisco ACI Public workspace](https://www.postman.com/cisco-dcn-marketing-enablement/cisco-aci-public/overview)
+- [Ansible collection](https://github.com/CiscoDevNet/ansible-aci)
+- [Terraform provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest)
+- [MCP server (community)](https://github.com/CiscoDevNet/mcp_server_cisco_aci_community)
+- [DevNet always-on ACI sandbox](https://devnetsandbox.cisco.com/DevNet/catalog/aci-simulator-always-on)
+- [security.txt](https://www.cisco.com/.well-known/security.txt)
+- [Parent company](https://apis.io/providers/cisco/)
 
 All URLs above returned HTTP 200 when probed on 2026-08-19.

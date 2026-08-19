@@ -1,0 +1,79 @@
+generated: '2026-08-19'
+method: searched
+source: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+docs: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+type: Webhooks
+asyncapi_published: false
+asyncapi_note: >-
+  Cisco publishes no AsyncAPI document for ACI. Probed for one on 2026-08-19 alongside the OpenAPI probes —
+  nothing at /asyncapi.yaml, /asyncapi.json or in the CiscoDevNet GitHub org. This artifact captures the real
+  event surface as a documented catalog instead of fabricating a spec.
+surface_style: websocket-subscription
+webhooks: false
+webhooks_note: >-
+  ACI has no outbound HTTP webhooks — no callback URL registration, no signed POST to a customer endpoint.
+  Push notification is delivered over a WebSocket the CLIENT opens and holds. That is a real event surface
+  and it is recorded as one, but an integrator expecting webhook semantics (fire-and-forget delivery,
+  retries, signatures) will not find them.
+protocol:
+  name: WebSocket
+  rfc: RFC 6455
+  detail: >-
+    "The API subscription feature uses the WebSocket protocol (RFC 6455) to implement a two-way connection
+    with the API client through which the API can send unsolicited notification messages to the client."
+channel:
+  open:
+    method: GET
+    path: '/socket{APIC-cookie-token}'
+    detail: >-
+      The WebSocket is opened against the APIC using the session token from aaaLogin as part of the URI.
+      Once established, the token does not need to be resent when the API session is refreshed.
+  multiplexing: >-
+    "Only a single WebSocket connection is needed to support multiple query subscriptions with multiple APIC
+    instances."
+subscription:
+  create:
+    detail: 'Append ?subscription=yes to ANY query — class query or managed-object query — to subscribe to it.'
+    examples:
+    - 'GET https://{apic-hostname}/api/class/fvTenant.json?subscription=yes'
+    - 'GET https://{apic-hostname}/api/class/fvTenant.json?&subscription=yes&refresh-timeout=140'
+  response: The query response carries a subscriptionId used to refresh or correlate the subscription.
+  refresh:
+    path: /api/subscriptionRefresh.json?id={subscriptionId}
+    detail: >-
+      Subscriptions expire and must be refreshed. Cisco's own public Postman collection "Webinar Query Demos"
+      includes a "Subscription Refresh" request against exactly this path.
+    default_timeout_param: refresh-timeout
+event_semantics:
+  trigger: >-
+    "When any MO is created, changed, or deleted because of a user- or system-initiated action, an event is
+    generated. If that event changes the results of an active subscribed query, the APIC generates a push
+    notification to the API client that created the subscription."
+  granularity: per subscribed query, not per event type
+  event_catalog: >-
+    There is no enumerable list of event names. The event surface is the whole Management Information Tree:
+    anything you can query, you can subscribe to. Practically, the interesting subscriptions are the same
+    classes listed in data-model/cisco-aci-data-model.yml — fvTenant, fvAEPg, fvBD, faultInst — plus the
+    fault classes, which is how ACI delivers real-time alerting.
+  delivery_guarantee: >-
+    Not documented. No at-least-once guarantee, no replay, no cursor/offset, no dead-letter. If the socket
+    drops, events during the gap are lost and the client must re-query.
+common_subscriptions:
+- class: faultInst
+  purpose: Real-time fault stream — the closest thing ACI has to an alerting webhook.
+- class: fvTenant
+  purpose: Tenant lifecycle changes.
+- class: fvAEPg
+  purpose: EPG policy changes.
+- class: fvCEp
+  purpose: Endpoint attach/detach — endpoints appearing and disappearing on the fabric.
+evidence:
+- source: Cisco APIC REST API Configuration Guide, "Subscription" and "Opening a WebSocket" sections
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+- source: 'Cisco public Postman workspace, collection "APIC Websockets" and "Webinar Query Demos" (Subscription Refresh request)'
+  url: https://www.postman.com/cisco-dcn-marketing-enablement/cisco-aci-public/overview
+gaps:
+- No AsyncAPI document.
+- No named event types — subscriptions are query-shaped, so events cannot be discovered without knowing the model first.
+- No delivery guarantee, replay or cursor documented.
+- No outbound webhooks, so there is no way to receive ACI events without holding a long-lived connection.

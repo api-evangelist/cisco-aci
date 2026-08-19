@@ -1,0 +1,105 @@
+generated: '2026-08-19'
+method: searched
+source: >-
+  https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later/m_using_the_rest_api.html
+note: >-
+  Conformance assertions for the Cisco APIC REST API. Nothing here is derived from a spec — Cisco publishes
+  none — so each entry is asserted from the published documentation or from a probe recorded elsewhere in
+  this repository. `conforms: false` is a measurement, not a complaint: several of these standards simply do
+  not apply to a controller shipped as customer-operated infrastructure.
+standards:
+- id: openapi
+  conforms: false
+  evidence: >-
+    No OpenAPI or Swagger document is published. Probed /openapi.json, /openapi.yaml, /swagger.json,
+    /v1/openapi.json, /api-docs on developer.cisco.com and on the DevNet always-on APIC sandbox host
+    sandboxapicdc.cisco.com on 2026-08-19 — all 404. The contract is expressed as the APIC Management
+    Information Model Reference instead.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    No AsyncAPI document, although a real WebSocket event surface exists — see
+    asyncapi/cisco-aci-event-subscriptions.yml.
+- id: graphql
+  conforms: false
+  evidence: No GraphQL endpoint is documented or discoverable.
+- id: rfc6455-websocket
+  conforms: true
+  evidence: >-
+    The subscription/notification channel is explicitly specified as WebSocket, RFC 6455, in the APIC REST
+    API Configuration Guide.
+- id: rest
+  conforms: partial
+  evidence: >-
+    Uses HTTP verbs and URI addressing, but only GET, POST and DELETE — there is no PUT or PATCH, and DELETE
+    is frequently expressed as a POST carrying status="deleted". Resource identity is a distinguished name
+    rather than a URL path hierarchy.
+- id: idempotency
+  conforms: true
+  evidence: >-
+    Documented directly: "The POST and DELETE methods are idempotent, meaning that there is no additional
+    effect if they are called more than once with the same input parameters. The GET method is nullipotent."
+    Declarative-model idempotency, not an Idempotency-Key header — see conventions/cisco-aci-conventions.yml.
+- id: pagination
+  conforms: true
+  evidence: 'page and page-size URI parameters, plus order-by for deterministic ordering.'
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are returned as a Cisco-specific error object inside the imdata envelope. No
+    application/problem+json.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    Cookie-based aaaLogin session tokens. No OAuth 2.0 authorization server, no /.well-known/
+    oauth-authorization-server (probed 404), no scopes.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404 on every probed host.
+- id: scim
+  conforms: false
+  evidence: >-
+    User and role management is done through the ACI object model (aaaUser, aaaDomain, aaaRole), not SCIM.
+    External identity is integrated at the login-domain level (RADIUS/TACACS+/LDAP).
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: >-
+    https://www.cisco.com/.well-known/security.txt returned 200 with Contact, Encryption, Policy, CSAF and
+    Expires fields, PGP-signed. Saved verbatim to well-known/cisco-aci-security.txt.
+- id: csaf
+  conforms: true
+  evidence: >-
+    https://www.cisco.com/.well-known/csaf/provider-metadata.json returned 200 — Cisco publishes
+    machine-readable security advisories under CSAF.
+- id: llms-txt
+  conforms: partial
+  evidence: >-
+    https://www.cisco.com/llms.txt returned 200 and lists Application Centric Infrastructure first among
+    Cisco's data-center priority pages. But the markdown twin it points at
+    (.../application-centric-infrastructure/index.html.md) returned 404 while the .html page returned 200,
+    so the agent-readable surface it advertises is not actually served.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: >-
+    No Sunset or Deprecation response headers. Deprecation is announced through Cisco's End-of-Life
+    notices — see lifecycle/cisco-aci-lifecycle.yml.
+- id: rate-limit-headers
+  conforms: false
+  evidence: >-
+    No RateLimit-* / X-RateLimit-* / Retry-After headers documented — see
+    rate-limits/cisco-aci-rate-limits.yml.
+- id: mcp
+  conforms: partial
+  evidence: >-
+    An MCP server exists in the CiscoDevNet org but is explicitly community, stdio-only, and ships no hosted
+    endpoint — see mcp/cisco-aci-mcp.yml.
+- id: a2a
+  conforms: false
+  evidence: >-
+    No agent card at /.well-known/agent-card.json or /.well-known/agent.json on www.cisco.com,
+    developer.cisco.com or sandboxapicdc.cisco.com (all 404, 2026-08-19).
+certifications:
+  see: security/cisco-aci-trust-center.yml
+  summary: >-
+    Common Criteria EAL2+ (ALC_FLR.2) for N9000 with ACI mode and APIC 6.1(2g), certified 2025-05-16; FIPS
+    140 certificate 4747 for APIC/ACI Controller v6.1, certified 2025-06-16.
