@@ -1,10 +1,15 @@
 aid: cisco-aci
 name: Cisco ACI
-description: 'Cisco Application Centric Infrastructure (ACI) is Cisco''s data-center SDN fabric, programmed through
-  the APIC controller''s REST API and its object model (the Management Information Tree). Cisco documents the APIC
-  REST API on DevNet and ships Ansible collections, a Terraform provider and a community MCP server against it.
-  The API is model-driven rather than OpenAPI-described: Cisco publishes the object model reference, not a machine-readable
-  contract.'
+description: 'Cisco Application Centric Infrastructure (ACI) is Cisco''s data-center SDN fabric, programmed
+  through the Application Policy Infrastructure Controller (APIC) and its object model, the Management Information
+  Tree (MIT). Every APIC GUI, CLI and SDK action is executed through one REST interface: HTTPS requests to
+  /api/mo/<dn>.json and /api/class/<class>.json on the customer-operated controller, authenticated with a
+  cookie-based aaaLogin session token and refreshed with aaaRefresh. The API is model-driven rather than
+  OpenAPI-described — Cisco publishes an exhaustive object-model reference (the APIC Management Information
+  Model Reference) plus a REST API configuration guide, a WebSocket (RFC 6455) event-subscription surface, an
+  Ansible collection, a Terraform provider, a Python SDK (Cobra) and a public Postman workspace, but no
+  anonymously fetchable OpenAPI, AsyncAPI or GraphQL contract.'
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cisco.png
 url: https://raw.githubusercontent.com/api-evangelist/cisco-aci/refs/heads/main/apis.yml
 type: Index
 access: 3rd-Party
@@ -14,8 +19,12 @@ x-source: cisco-family-buildout:2026-08-19
 x-parent: cisco
 x-relationship: product
 x-contract-status: none
-x-contract-note: No anonymously fetchable machine-readable contract was found on 2026-08-19 (probed; real 404s).
-  API Evangelist has not authored a substitute.
+x-contract-note: 'No anonymously fetchable machine-readable contract was found on 2026-08-19. STEP 0b contract
+  discovery was re-run: /openapi.json, /swagger.json, /api-docs and every /.well-known/* path on
+  developer.cisco.com returned 404; the DevNet always-on APIC sandbox host sandboxapicdc.cisco.com returned
+  404 for /openapi.json and /swagger.json and 403 (auth required) for /api/class/fvTenant.json. Cisco publishes
+  the object model reference and a public Postman workspace instead of a spec. API Evangelist has not authored
+  a substitute.'
 specificationVersion: '0.23'
 created: '2026-08-19'
 modified: '2026-08-19'
@@ -26,23 +35,128 @@ tags:
 - Fabric
 - Automation
 - Enterprise
-apis: []
+- Network Automation
+- Infrastructure
+- Controller
+- REST API
+apis:
+- aid: cisco-aci:cisco-apic-rest-api
+  name: Cisco APIC REST API
+  description: 'The Application Policy Infrastructure Controller REST API is the single programmatic interface
+    into the ACI Management Information Tree. GET, POST and DELETE against /api/mo/<distinguished-name>.json
+    (managed-object addressing) or /api/class/<class-name>.json (class queries) read and write policy — tenants,
+    application profiles, EPGs, bridge domains, VRFs, contracts, filters, L3Outs — plus statistics, faults and
+    audit records. Query scoping, filtering, ordering and pagination are expressed as URI parameters
+    (query-target, target-subtree-class, rsp-subtree, order-by, page, page-size). The same endpoints support
+    ?subscription=yes to open a WebSocket push-notification channel.'
+  humanURL: https://developer.cisco.com/docs/aci/
+  baseURL: https://{apic-hostname}/api
+  tags:
+  - SDN
+  - Data Center
+  - Networking
+  - Fabric
+  - Automation
+  properties:
+  - type: Documentation
+    url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later.html
+  - type: APIReference
+    url: https://developer.cisco.com/site/apic-mim-ref-api/
+  - type: GettingStarted
+    url: https://developer.cisco.com/docs/aci/getting-started/
 common:
-- type: Portal
-  url: https://developer.cisco.com/docs/aci/
-- type: Documentation
-  url: https://developer.cisco.com/docs/aci/
-- type: APIReference
-  url: https://developer.cisco.com/docs/aci/
+- type: VulnerabilityDisclosure
+  url: security/cisco-aci-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/cisco-aci-domain-security.yml
 - type: ParentCompany
   url: https://apis.io/providers/cisco/
   name: Cisco
-- type: Ansible
-  url: https://github.com/CiscoDevNet/ansible-aci
-- type: MCPServer
-  url: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community
+  x-relationship: product
+  x-generated-by: cisco-family:2026-08-19
+- type: DeveloperPortal
+  url: https://developer.cisco.com/site/aci/
 - type: Portal
   url: https://developer.cisco.com/
+- type: Documentation
+  url: https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later.html
+- type: APIReference
+  url: https://developer.cisco.com/site/apic-mim-ref-api/
+- type: GettingStarted
+  url: https://developer.cisco.com/docs/aci/getting-started/
+- type: Support
+  url: https://www.cisco.com/c/en/us/support/index.html
+- type: Blog
+  url: https://blogs.cisco.com/tag/aci
+- type: GitHubOrganization
+  url: https://github.com/CiscoDevNet
+- type: TermsOfService
+  url: https://www.cisco.com/c/en/us/about/legal/terms-conditions.html
+- type: PrivacyPolicy
+  url: https://www.cisco.com/c/en/us/about/legal/privacy-full.html
+- type: Postman
+  url: https://www.postman.com/cisco-dcn-marketing-enablement/cisco-aci-public/overview
+- type: Ansible
+  url: https://github.com/CiscoDevNet/ansible-aci
+- type: Terraform
+  url: https://registry.terraform.io/providers/CiscoDevNet/aci/latest
+- type: SourceCode
+  url: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community
+- type: MCPServer
+  url: mcp/cisco-aci-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/cisco-aci-tool-crosswalk.yml
+- type: Packages
+  url: packages/cisco-aci-packages.yml
+- type: SDKs
+  url: packages/cisco-aci-packages.yml
+- type: WellKnown
+  url: well-known/cisco-aci-well-known.yml
+- type: SecurityTxt
+  url: well-known/cisco-aci-security.txt
+- type: LLMsTxt
+  url: llms/cisco-aci-llms.txt
+- type: Authentication
+  url: authentication/cisco-aci-authentication.yml
+- type: Conventions
+  url: conventions/cisco-aci-conventions.yml
+- type: Idempotency
+  url: conventions/cisco-aci-conventions.yml
+- type: ErrorCatalog
+  url: errors/cisco-aci-problem-types.yml
+- type: RateLimits
+  url: rate-limits/cisco-aci-rate-limits.yml
+- type: Plans
+  url: plans/cisco-aci-plans-pricing.yml
+- type: Lifecycle
+  url: lifecycle/cisco-aci-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/cisco-aci-lifecycle.yml
+- type: ChangeLog
+  url: changelog/cisco-aci-changelog.yml
+- type: CLI
+  url: cli/cisco-aci-cli.yml
+- type: Sandbox
+  url: sandbox/cisco-aci-sandbox.yml
+- type: DataModel
+  url: data-model/cisco-aci-data-model.yml
+- type: Webhooks
+  url: asyncapi/cisco-aci-event-subscriptions.yml
+- type: Conformance
+  url: conformance/cisco-aci-conformance.yml
+- type: Security
+  url: security/cisco-aci-vulnerability-disclosure.yml
+- type: TrustCenter
+  url: security/cisco-aci-trust-center.yml
+- type: Compliance
+  url: security/cisco-aci-trust-center.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-19'
+  status: enriched
+  artifacts_added: 25
+  pass: local-v1
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
