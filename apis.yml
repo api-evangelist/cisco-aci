@@ -1,0 +1,50 @@
+aid: cisco-aci
+name: Cisco ACI
+description: 'Cisco Application Centric Infrastructure (ACI) is Cisco''s data-center SDN fabric, programmed through
+  the APIC controller''s REST API and its object model (the Management Information Tree). Cisco documents the APIC
+  REST API on DevNet and ships Ansible collections, a Terraform provider and a community MCP server against it.
+  The API is model-driven rather than OpenAPI-described: Cisco publishes the object model reference, not a machine-readable
+  contract.'
+url: https://raw.githubusercontent.com/api-evangelist/cisco-aci/refs/heads/main/apis.yml
+type: Index
+access: 3rd-Party
+position: Consumer
+x-type: company
+x-source: cisco-family-buildout:2026-08-19
+x-parent: cisco
+x-relationship: product
+x-contract-status: none
+x-contract-note: No anonymously fetchable machine-readable contract was found on 2026-08-19 (probed; real 404s).
+  API Evangelist has not authored a substitute.
+specificationVersion: '0.23'
+created: '2026-08-19'
+modified: '2026-08-19'
+tags:
+- SDN
+- Data Center
+- Networking
+- Fabric
+- Automation
+- Enterprise
+apis: []
+common:
+- type: Portal
+  url: https://developer.cisco.com/docs/aci/
+- type: Documentation
+  url: https://developer.cisco.com/docs/aci/
+- type: APIReference
+  url: https://developer.cisco.com/docs/aci/
+- type: ParentCompany
+  url: https://apis.io/providers/cisco/
+  name: Cisco
+- type: Ansible
+  url: https://github.com/CiscoDevNet/ansible-aci
+- type: MCPServer
+  url: https://github.com/CiscoDevNet/mcp_server_cisco_aci_community
+- type: Portal
+  url: https://developer.cisco.com/
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+- FN: APIs.json
+  email: info@apis.io
