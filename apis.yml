@@ -1,14 +1,13 @@
 aid: cisco-aci
 name: Cisco ACI
-description: 'Cisco Application Centric Infrastructure (ACI) is Cisco''s data-center SDN fabric, programmed
-  through the Application Policy Infrastructure Controller (APIC) and its object model, the Management Information
-  Tree (MIT). Every APIC GUI, CLI and SDK action is executed through one REST interface: HTTPS requests to
-  /api/mo/<dn>.json and /api/class/<class>.json on the customer-operated controller, authenticated with a
-  cookie-based aaaLogin session token and refreshed with aaaRefresh. The API is model-driven rather than
-  OpenAPI-described — Cisco publishes an exhaustive object-model reference (the APIC Management Information
-  Model Reference) plus a REST API configuration guide, a WebSocket (RFC 6455) event-subscription surface, an
-  Ansible collection, a Terraform provider, a Python SDK (Cobra) and a public Postman workspace, but no
-  anonymously fetchable OpenAPI, AsyncAPI or GraphQL contract.'
+description: 'Cisco Application Centric Infrastructure (ACI) is Cisco''s data-center SDN fabric, programmed through
+  the Application Policy Infrastructure Controller (APIC) and its object model, the Management Information Tree
+  (MIT). Every APIC GUI, CLI and SDK action is executed through one REST interface: HTTPS requests to /api/mo/<dn>.json
+  and /api/class/<class>.json on the customer-operated controller, authenticated with a cookie-based aaaLogin session
+  token and refreshed with aaaRefresh. The API is model-driven rather than OpenAPI-described — Cisco publishes an
+  exhaustive object-model reference (the APIC Management Information Model Reference) plus a REST API configuration
+  guide, a WebSocket (RFC 6455) event-subscription surface, an Ansible collection, a Terraform provider, a Python
+  SDK (Cobra) and a public Postman workspace, but no anonymously fetchable OpenAPI, AsyncAPI or GraphQL contract.'
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cisco.png
 url: https://raw.githubusercontent.com/api-evangelist/cisco-aci/refs/heads/main/apis.yml
 type: Index
@@ -19,12 +18,8 @@ x-source: cisco-family-buildout:2026-08-19
 x-parent: cisco
 x-relationship: product
 x-contract-status: none
-x-contract-note: 'No anonymously fetchable machine-readable contract was found on 2026-08-19. STEP 0b contract
-  discovery was re-run: /openapi.json, /swagger.json, /api-docs and every /.well-known/* path on
-  developer.cisco.com returned 404; the DevNet always-on APIC sandbox host sandboxapicdc.cisco.com returned
-  404 for /openapi.json and /swagger.json and 403 (auth required) for /api/class/fvTenant.json. Cisco publishes
-  the object model reference and a public Postman workspace instead of a spec. API Evangelist has not authored
-  a substitute.'
+x-contract-note: No anonymously fetchable machine-readable contract found (probed 2026-08-19, real 404s). ACI is
+  model-driven through the APIC object model rather than OpenAPI-described. API Evangelist has not authored a substitute.
 specificationVersion: '0.23'
 created: '2026-08-19'
 modified: '2026-08-19'
@@ -42,13 +37,13 @@ tags:
 apis:
 - aid: cisco-aci:cisco-apic-rest-api
   name: Cisco APIC REST API
-  description: 'The Application Policy Infrastructure Controller REST API is the single programmatic interface
-    into the ACI Management Information Tree. GET, POST and DELETE against /api/mo/<distinguished-name>.json
-    (managed-object addressing) or /api/class/<class-name>.json (class queries) read and write policy — tenants,
-    application profiles, EPGs, bridge domains, VRFs, contracts, filters, L3Outs — plus statistics, faults and
-    audit records. Query scoping, filtering, ordering and pagination are expressed as URI parameters
-    (query-target, target-subtree-class, rsp-subtree, order-by, page, page-size). The same endpoints support
-    ?subscription=yes to open a WebSocket push-notification channel.'
+  description: The Application Policy Infrastructure Controller REST API is the single programmatic interface into
+    the ACI Management Information Tree. GET, POST and DELETE against /api/mo/<distinguished-name>.json (managed-object
+    addressing) or /api/class/<class-name>.json (class queries) read and write policy — tenants, application profiles,
+    EPGs, bridge domains, VRFs, contracts, filters, L3Outs — plus statistics, faults and audit records. Query scoping,
+    filtering, ordering and pagination are expressed as URI parameters (query-target, target-subtree-class, rsp-subtree,
+    order-by, page, page-size). The same endpoints support ?subscription=yes to open a WebSocket push-notification
+    channel.
   humanURL: https://developer.cisco.com/docs/aci/
   baseURL: https://{apic-hostname}/api
   tags:
