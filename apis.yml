@@ -25,6 +25,17 @@ created: '2026-08-19'
 modified: '2026-08-19'
 tags:
 - SDN
+- Data-Center
+- Networking
+- Fabric
+- Automation
+- Enterprise
+- Network Automation
+- Infrastructure
+- Controller
+- REST API
+tags_raw:
+- SDN
 - Data Center
 - Networking
 - Fabric
@@ -47,6 +58,12 @@ apis:
   humanURL: https://developer.cisco.com/docs/aci/
   baseURL: https://{apic-hostname}/api
   tags:
+  - SDN
+  - Data-Center
+  - Networking
+  - Fabric
+  - Automation
+  tags_raw:
   - SDN
   - Data Center
   - Networking
