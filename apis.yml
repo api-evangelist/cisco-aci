@@ -8,6 +8,18 @@ description: 'Cisco Application Centric Infrastructure (ACI) is Cisco''s data-ce
   exhaustive object-model reference (the APIC Management Information Model Reference) plus a REST API configuration
   guide, a WebSocket (RFC 6455) event-subscription surface, an Ansible collection, a Terraform provider, a Python
   SDK (Cobra) and a public Postman workspace, but no anonymously fetchable OpenAPI, AsyncAPI or GraphQL contract.'
+deliveryModel:
+  model: unknown
+  open_source: unknown
+  commercial: true
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - pricing
+  - repository-unlicensed
+  generated: '2026-08-28'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cisco.png
 url: https://raw.githubusercontent.com/api-evangelist/cisco-aci/refs/heads/main/apis.yml
 type: Index
