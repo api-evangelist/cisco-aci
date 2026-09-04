@@ -20,11 +20,27 @@ deliveryModel:
   - repository-unlicensed
   generated: '2026-08-28'
   method: derived
+accessModel:
+  pricing: unknown
+  onboarding: approval
+  trial: false
+  try_now: false
+  public: false
+  label: Requires approval
+  confidence: medium
+  source:
+  - plans
+  - authentication
+  - rate-limits
+  - security
+  - sandbox
+  generated: '2026-09-03'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/cisco.png
 url: https://raw.githubusercontent.com/api-evangelist/cisco-aci/refs/heads/main/apis.yml
 type: Index
 access: 3rd-Party
-position: Consumer
+position: Consuming
 x-type: company
 x-source: cisco-family-buildout:2026-08-19
 x-parent: cisco
