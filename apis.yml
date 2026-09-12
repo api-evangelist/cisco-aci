@@ -105,6 +105,8 @@ apis:
   - type: GettingStarted
     url: https://developer.cisco.com/docs/aci/getting-started/
 common:
+- type: Website
+  url: https://www.cisco.com/
 - type: VulnerabilityDisclosure
   url: security/cisco-aci-vulnerability-disclosure.yml
 - type: DomainSecurity
