@@ -64,51 +64,120 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Cisco Application Centric Infrastructure (ACI) is Cisco's data-center SDN fabric, programmed through the
-Application Policy Infrastructure Controller (APIC) and its object model, the Management Information Tree
-(MIT). Every APIC GUI, CLI and SDK action is executed through one REST interface: HTTPS requests to
-`/api/mo/<dn>.json` and `/api/class/<class>.json` on the customer-operated controller, authenticated with a
-cookie-based `aaaLogin` session token and refreshed with `aaaRefresh`. The API is model-driven rather than
-OpenAPI-described.
+Cisco Application Centric Infrastructure (ACI) is Cisco's data-center SDN fabric, programmed through the Application Policy Infrastructure Controller (APIC) and its object model, the Management Information Tree (MIT). Every APIC GUI, CLI and SDK action is executed through one REST interface: HTTPS requests to /api/mo/<dn>.json and /api/class/<class>.json on the customer-operated controller, authenticated with a cookie-based aaaLogin session token and refreshed with aaaRefresh. The API is model-driven rather than OpenAPI-described — Cisco publishes an exhaustive object-model reference (the APIC Management Information Model Reference) plus a REST API configuration guide, a WebSocket (RFC 6455) event-subscription surface, an Ansible collection, a Terraform provider, a Python SDK (Cobra) and a public Postman workspace, but no anonymously fetchable OpenAPI, AsyncAPI or GraphQL contract.
 
-## Ownership
+**Areas:** SDN · Data Center · Networking · Fabric · Automation · Enterprise · Network Automation · Infrastructure · Controller · REST API
 
-Part of the Cisco family.
+## Cisco ACI on APIs.io
 
-## Contract status
+Everything profiled for Cisco ACI is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/cisco-aci/](https://apis.io/providers/cisco-aci/)** — or go straight to one of the APIs or properties below.
 
-**No anonymously fetchable machine-readable contract.** Re-probed on 2026-08-19: `/openapi.json`,
-`/openapi.yaml`, `/swagger.json`, `/v1/openapi.json`, `/api-docs` and every `/.well-known/*` path on
-`developer.cisco.com` returned 404, and the DevNet always-on APIC sandbox host `sandboxapicdc.cisco.com`
-returned 404 for `/openapi.json` and `/swagger.json` and 403 (auth required) for
-`/api/class/fvTenant.json`. Cisco publishes an exhaustive object-model reference and a public Postman
-workspace in place of a spec. API Evangelist has not authored a substitute.
+### APIs (1)
 
-## What Cisco does publish
+- [Cisco APIC REST API](https://apis.io/apis/cisco-aci/cisco-apic-rest-api/) — The Application Policy Infrastructure Controller REST API is the single programmatic interface into the ACI Management Information Tree. GET, POST and…
 
-- **APIC REST API Configuration Guide** — auth, query scoping, pagination, subscriptions, throttling.
-- **Management Information Model Reference** — every MO class, property, fault and event type, per release.
-- **A public Postman workspace** — "Cisco ACI - Public", 4 collections against `https://{{apic}}/api/...`.
-- **A WebSocket (RFC 6455) event surface** — any query becomes a live subscription with `?subscription=yes`.
-- **`security.txt` and `llms.txt`** on `www.cisco.com` — both real 200s, saved to this repo.
-- **Infrastructure-as-code clients** — the `cisco.aci` Ansible collection and the `CiscoDevNet/aci`
-  Terraform provider, both actively released.
-- **A community MCP server** in the CiscoDevNet org — stdio only, 47 registered tools.
-- **Product certifications** — Common Criteria EAL2+ for N9000/ACI mode with APIC 6.1(2g) and FIPS 140
-  certificate 4747 for APIC/ACI Controller v6.1.
+### Published properties
 
-## Verified links
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- [Developer portal](https://developer.cisco.com/site/aci/)
-- [Documentation — APIC REST API Configuration Guide](https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later.html)
-- [API reference — APIC Management Information Model Reference](https://developer.cisco.com/site/apic-mim-ref-api/)
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Cisco Aci Event Subscriptions](https://apis.io/asyncapis/cisco-aci/cisco-aci-event-subscriptions/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Community MCP Server for Cisco ACI](https://apis.io/servers/cisco-aci/community-mcp-server-for-cisco-aci/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Cisco Aci Authentication](https://apis.io/security/cisco-aci/cisco-aci-authentication/)
+- [Cisco Aci Domain Security](https://apis.io/security/cisco-aci/cisco-aci-domain-security/)
+- [Cisco Aci Trust Center](https://apis.io/security/cisco-aci/cisco-aci-trust-center/)
+- [Cisco Aci Vulnerability Disclosure](https://apis.io/security/cisco-aci/cisco-aci-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Cisco Aci Plans Pricing](https://apis.io/plans/cisco-aci/cisco-aci-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Cisco Aci Rate Limits](https://apis.io/rate-limits/cisco-aci/cisco-aci-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.cisco.com/)
+- [Documentation](https://www.cisco.com/c/en/us/td/docs/dcn/aci/apic/all/apic-rest-api-configuration-guide/cisco-apic-rest-api-configuration-guide-42x-and-later.html)
 - [Getting started](https://developer.cisco.com/docs/aci/getting-started/)
-- [Postman — Cisco ACI Public workspace](https://www.postman.com/cisco-dcn-marketing-enablement/cisco-aci-public/overview)
-- [Ansible collection](https://github.com/CiscoDevNet/ansible-aci)
-- [Terraform provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest)
-- [MCP server (community)](https://github.com/CiscoDevNet/mcp_server_cisco_aci_community)
-- [DevNet always-on ACI sandbox](https://devnetsandbox.cisco.com/DevNet/catalog/aci-simulator-always-on)
-- [security.txt](https://www.cisco.com/.well-known/security.txt)
-- [Parent company](https://apis.io/providers/cisco/)
+- [API reference](https://developer.cisco.com/site/apic-mim-ref-api/)
+- [Support](https://www.cisco.com/c/en/us/support/index.html)
+- [Blog](https://blogs.cisco.com/tag/aci)
+- [Terms of service](https://www.cisco.com/c/en/us/about/legal/terms-conditions.html)
+- [Privacy policy](https://www.cisco.com/c/en/us/about/legal/privacy-full.html)
+- [GitHub](https://github.com/CiscoDevNet)
 
-All URLs above returned HTTP 200 when probed on 2026-08-19.
+## API Evangelist rating
+
+**Kin Score 55.7** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.7 |
+| Contract quality | 39.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 65.8 |
+| Developer ergonomics | 88.1 |
+| Access clarity | 36.8 |
+
+**Agent readiness 35.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 35.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/cisco-aci/](https://apis.io/providers/cisco-aci/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Cisco ACI: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/cisco-aci/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
